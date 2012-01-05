@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, BubbasGroceryListAppActivity!</string>
+    <string name="app_name">BubbasGroceryListApp</string>
+    <string-array name="food_array">
+        <item>alfredo sauce,1</item>
+        <item>bread,0</item>
+        <item>butter,7</item>
+        <item>carrots,0</item>
+        <item>catsup,1</item>
+        <item>cellery,0</item>
+        <item>cheddar - block,0</item>
+        <item>cheddar - shredded,0</item>
+        <item>chicken nuggets,12</item>
+        <item>chili - no beans, 2</item>
+        <item>chili with beans,2</item>
+        <item>chips - doritos,9</item>
+        <item>chips - ruffles,9</item>
+        <item>choc drink mix,5</item>
+        <item>coffee,6</item>
+        <item>corn - can,3</item>
+        <item>eggs,10</item>
+        <item>green beans - can,3</item>
+        <item>hamburger,2</item>
+        <item>ketchup,1</item>
+        <item>lean pockets,11</item>
+        <item>mayo,1</item>
+        <item>milk,5</item>
+        <item>miracle whip,1</item>
+        <item>mozerella - shredded,0</item>
+        <item>peas - can,3</item>
+        <item>pickles - bread n butter,1</item>
+        <item>poptarts - blueberry,5</item>
+        <item>poptarts - cherry,5</item>
+        <item>poptarts - smores,5</item>
+        <item>prego,1</item>
+        <item>salsa - medium,2</item>
+        <item>salsa - mild,2</item>
+        <item>velveeta,1</item>
+	</string-array>
+</resources>

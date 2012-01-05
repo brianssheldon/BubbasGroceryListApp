@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.bubba"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="7" />
+
+    <application android:icon="@drawable/bubbadevil" android:label="Bubba's Grocery List App" android:debuggable="true">
+        <activity android:name=".BubbasGroceryListAppActivity"
+                  android:label="Bubba's Grocery List App">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+ 		<activity android:name=".EditTextMsgNumbersActivity"></activity>
+    </application>
+    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+</manifest>

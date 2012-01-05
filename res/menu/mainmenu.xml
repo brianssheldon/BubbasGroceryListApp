@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item  
+	    android:id="@+id/editTextMsgNbrlist" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="edit text msg nbrs" 
+	    android:visible="true"/>
+    <item  
+	    android:id="@+id/textgrocerylist1"
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="text 1" 
+	    android:visible="true"/>
+    <item  
+	    android:id="@+id/textgrocerylist2" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="text 2" 
+	    android:visible="true"/>
+    <item  
+	    android:id="@+id/textgrocerylist3" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="text 3" 
+	    android:visible="true"/>
+</menu>

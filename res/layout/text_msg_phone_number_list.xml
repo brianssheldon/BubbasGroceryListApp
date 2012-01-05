@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <EditText
+        android:id="@+id/entry1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:background="@android:drawable/editbox_background"/>
+    <EditText
+        android:id="@+id/entry2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/entry1"
+        android:background="@android:drawable/editbox_background"/>
+    <EditText
+        android:id="@+id/entry3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/entry2"
+        android:background="@android:drawable/editbox_background"/>
+    <Button
+        android:id="@+id/save2"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/entry3"
+        android:layout_marginLeft="10dip"
+        android:text="save" />
+    <Button
+        android:id="@+id/exit2"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/entry3"
+        android:layout_toRightOf="@id/save2"
+        android:text="exit" />
+</RelativeLayout>

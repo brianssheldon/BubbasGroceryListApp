@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item  
+	    android:id="@+id/save" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="save" 
+	    android:visible="true">
+    </item>
+    <item  
+	    android:id="@+id/exit" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="exit" 
+	    android:visible="true">
+    </item>
+</menu>
