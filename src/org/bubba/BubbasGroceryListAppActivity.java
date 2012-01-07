@@ -63,7 +63,7 @@ public class BubbasGroceryListAppActivity extends Activity
 		    editAndAddLL.addView(textView, 0);
 		    
 		    Button addButton = new Button(this);
-		    addButton.setText("Add");
+		    addButton.setText("Addx");
 		    addButton.setWidth(90);
 		    addButton.setOnClickListener(btnAddOnClick);
 		    editAndAddLL.addView(addButton, 1);
@@ -82,17 +82,40 @@ public class BubbasGroceryListAppActivity extends Activity
 			ll.removeViewAt(1);
 		}
 		
+		LinearLayout row;
+		TextView itemDesc;
+		
 		ArrayList<ItemLoc> list = readGroceryListFile();
         ItemLoc ele;
         
         for (int i = 0; i < list.size(); i++)
 		{
+        	row = new LinearLayout(this);
+			row.setOrientation(LinearLayout.HORIZONTAL);
+			
 			ele = list.get(i);
-			CheckBox cb = new CheckBox(this);
-            cb.setText(ele.toString());
-            cb.setId(i);
-			cb.setOnCheckedChangeListener(new DeleteRowListener());
-            ll.addView(cb);
+			
+			if(!"".equals(ele.toString()))
+			{			
+				CheckBox cb = new CheckBox(this);
+	            cb.setId(i);
+	            cb.setText(ele.toString());
+	            cb.setSoundEffectsEnabled(true);
+	            cb.setButtonDrawable(R.drawable.trashcan);
+				cb.setOnCheckedChangeListener(new DeleteRowListener());
+				
+				row.addView(cb);
+				
+//				itemDesc = new TextView(this);
+//				itemDesc.setText(ele.toString());
+//				row.addView(itemDesc);S
+				
+	            ll.addView(row);
+			}
+			else
+			{
+				String x = "";
+			}
 		}
 	}
     
@@ -240,25 +263,10 @@ public class BubbasGroceryListAppActivity extends Activity
 			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
 			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
 			atv.setText("");
-			
-			while (ll.getChildCount() > 1)
-			{
-				ll.removeViewAt(1);
-			}
-			
-			ItemLoc ele;
-			
-	        for (int i = 0; i < sortedArray.size(); i++)
-			{
-				ele = sortedArray.get(i);
-				CheckBox cb = new CheckBox(context);
-	            cb.setText(ele.toString());
-	            cb.setId(i);
-				cb.setOnCheckedChangeListener(new DeleteRowListener());
-	            ll.addView(cb, i + 1);
-			}
 	        
 	        utils.saveFile(groceryList, context);
+	        
+	        addCheckBoxesFromGroceryFile();
 		}
 	}
     
