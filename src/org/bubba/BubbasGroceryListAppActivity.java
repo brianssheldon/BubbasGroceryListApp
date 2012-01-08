@@ -24,8 +24,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -53,7 +56,7 @@ public class BubbasGroceryListAppActivity extends Activity
         editAndAddLL.setOrientation(LinearLayout.HORIZONTAL);
         
 	        textView = new AutoCompleteTextView(this);
-	        textView.setWidth(350);
+	        textView.setWidth(400);
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 		    	this,
 		    	R.layout.list_item,
@@ -63,7 +66,7 @@ public class BubbasGroceryListAppActivity extends Activity
 		    editAndAddLL.addView(textView, 0);
 		    
 		    Button addButton = new Button(this);
-		    addButton.setText("Addx");
+		    addButton.setText("Add");
 		    addButton.setWidth(90);
 		    addButton.setOnClickListener(btnAddOnClick);
 		    editAndAddLL.addView(addButton, 1);
@@ -82,16 +85,25 @@ public class BubbasGroceryListAppActivity extends Activity
 			ll.removeViewAt(1);
 		}
 		
-		LinearLayout row;
-		TextView itemDesc;
+		RelativeLayout row;
+		EditText itemDesc;
+		
+		RelativeLayout.LayoutParams left = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		left.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		left.width = 400;
+		
+		RelativeLayout.LayoutParams right = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		right.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		right.width = 60;
 		
 		ArrayList<ItemLoc> list = readGroceryListFile();
         ItemLoc ele;
         
         for (int i = 0; i < list.size(); i++)
 		{
-        	row = new LinearLayout(this);
-			row.setOrientation(LinearLayout.HORIZONTAL);
+        	row = new RelativeLayout(this);
 			
 			ele = list.get(i);
 			
@@ -102,13 +114,15 @@ public class BubbasGroceryListAppActivity extends Activity
 	            cb.setText(ele.toString());
 	            cb.setSoundEffectsEnabled(true);
 	            cb.setButtonDrawable(R.drawable.trashcan);
+	            cb.setLayoutParams(left);
 				cb.setOnCheckedChangeListener(new DeleteRowListener());
 				
-				row.addView(cb);
+				row.addView(cb);//, left);
 				
-//				itemDesc = new TextView(this);
-//				itemDesc.setText(ele.toString());
-//				row.addView(itemDesc);S
+				itemDesc = new EditText(this);
+				itemDesc.setText("1");
+				itemDesc.setLayoutParams(right);
+				row.addView(itemDesc);//, right);
 				
 	            ll.addView(row);
 			}
