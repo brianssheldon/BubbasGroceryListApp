@@ -1,16 +1,45 @@
 package org.bubba;
 
+import java.io.Serializable;
 
-public class ItemLoc implements Comparable<Object>
+
+public class ItemLoc implements Comparable<Object>, Serializable
 {
 	private String aisle;
 	private String item;
+	private String quantity;
 	
 	public ItemLoc(){}
 	public ItemLoc(String item, String aisle)
 	{
 		this.item = item.replace('|', ' ');
 		this.aisle = aisle.replace('|', ' ');
+	}
+
+	public ItemLoc(String item, String aisle, String quantity)
+	{
+		this.item = item.replace('|', ' ');
+		this.aisle = aisle.replace('|', ' ');
+		this.quantity = quantity.replace('|', ' ');
+	}
+	
+	public String toString()
+	{
+		if(aisle.length() > 3)
+		{
+			return "";
+		}
+		return "   ".substring(0, 3 - aisle.length()) + aisle + "    " + item + "    " + quantity;
+	}
+	
+	public int compareTo(Object another)
+	{
+		String a = "000".substring(0, 3 - aisle.length()) + aisle;
+		
+		String b = ((ItemLoc)another).getAisle();
+		b = "000".substring(0, 3 - b.length()) + b;
+		
+		return a.compareTo(b);
 	}
 	
 	public String getAisle()
@@ -29,23 +58,12 @@ public class ItemLoc implements Comparable<Object>
 	{
 		this.item = item;
 	}
-	
-	public String toString()
+	public String getQuantity()
 	{
-		if(aisle.length() > 3)
-		{
-			return "";
-		}
-		return "   ".substring(0, 3 - aisle.length()) + aisle + "    " + item;
+		return quantity;
 	}
-	
-	public int compareTo(Object another)
+	public void setQuantity(String quantity)
 	{
-		String a = "000".substring(0, 3 - aisle.length()) + aisle;
-		
-		String b = ((ItemLoc)another).getAisle();
-		b = "000".substring(0, 3 - b.length()) + b;
-		
-		return a.compareTo(b);
+		this.quantity = quantity;
 	}
 }

@@ -2,14 +2,13 @@ package org.bubba;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -17,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -24,27 +24,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class BubbasGroceryListAppActivity extends Activity
 {
-	private ItemLocUtils utils;
+	private ItemLocUtils utils = new ItemLocUtils();
 	private static AutoCompleteTextView textView;
-	private String[] groceryList = new String[100];
+	ArrayList<ItemLoc> groceryList = new ArrayList<ItemLoc>();
 	private LinearLayout ll;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
-        utils = new ItemLocUtils();
     
         ScrollView sv = new ScrollView(this);
 
@@ -98,20 +95,20 @@ public class BubbasGroceryListAppActivity extends Activity
 		right.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		right.width = 60;
 		
-		ArrayList<ItemLoc> list = readGroceryListFile();
+		groceryList = utils.readGroceryListFile(this);
         ItemLoc ele;
         
-        for (int i = 0; i < list.size(); i++)
+        for (int i = 0; i < groceryList.size(); i++)
 		{
         	row = new RelativeLayout(this);
 			
-			ele = list.get(i);
+			ele = groceryList.get(i);
 			
 			if(!"".equals(ele.toString()))
 			{			
 				CheckBox cb = new CheckBox(this);
 	            cb.setId(i);
-	            cb.setText(ele.toString());
+	            cb.setText(ele.getAisle() +  "  " + ele.getItem());
 	            cb.setSoundEffectsEnabled(true);
 	            cb.setButtonDrawable(R.drawable.trashcan);
 	            cb.setLayoutParams(left);
@@ -120,9 +117,67 @@ public class BubbasGroceryListAppActivity extends Activity
 				row.addView(cb);//, left);
 				
 				itemDesc = new EditText(this);
-				itemDesc.setText("1");
+				itemDesc.setText(ele.getQuantity());
 				itemDesc.setLayoutParams(right);
-				row.addView(itemDesc);//, right);
+				itemDesc.setId(i + 99);
+				itemDesc.setOnFocusChangeListener(new OnFocusChangeListener()
+				{
+					@Override
+					public void onFocusChange(View v,boolean hasFocus)
+					{ /* When focus is lost check that the text field has valid values. */
+						updateQuantity(v, hasFocus);
+					}
+
+					void updateQuantity(View v, boolean hasFocus) 
+					{
+						if (!hasFocus)
+						{
+							RelativeLayout child;
+							int cc = ll.getChildCount();
+
+							boolean recordUpdated = false;
+							
+							for (int j = 1; j < cc; j++)
+							{
+								child = (RelativeLayout) ll.getChildAt(j);
+								CheckBox cb2 = (CheckBox) child.getChildAt(0);
+								EditText et2 = (EditText) child.getChildAt(1);
+								
+								StringBuffer cbDesc = new StringBuffer( 
+										cb2.getText().toString().trim());
+								String newQty = et2.getText().toString();
+								utils.removeLeadingSpacesAndNumbers(cbDesc);						
+								
+								for (Iterator<ItemLoc> iter = groceryList.iterator(); iter.hasNext();)
+								{
+									ItemLoc itemLoc = (ItemLoc) iter.next();
+									
+									if(itemLoc.getItem().contains(cbDesc)
+											&& !itemLoc.getQuantity().equals(newQty))
+									{
+										itemLoc.setQuantity(newQty);
+										recordUpdated = true;
+										break;
+									}
+								}
+								
+								if(recordUpdated)
+								{
+									break;
+								}
+								
+								String asdaaadd = "";
+							}
+							
+							if(recordUpdated)
+							{
+								Collections.sort(groceryList);
+								utils.saveFile(groceryList, v.getContext());
+							}
+						}
+					}
+				});
+				row.addView(itemDesc);
 				
 	            ll.addView(row);
 			}
@@ -133,84 +188,23 @@ public class BubbasGroceryListAppActivity extends Activity
 		}
 	}
     
-	private ArrayList<ItemLoc> readGroceryListFile()
-	{
-    	StringBuffer sb = new StringBuffer();
-    	ArrayList<ItemLoc> arrayList = new ArrayList<ItemLoc>();
-    	String FILENAME = "grocerylist.txt";
-    	
-		try
-    	{
-            FileInputStream fis = openFileInput(FILENAME);
-	    	fis.close();
-    	}
-    	catch(Exception e)
-    	{
-    		try
-    		{
-	    		FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-		    	fos.write("".getBytes());
-		    	fos.close();
-    		}
-    		catch(Exception e2)
-        	{
-    			// eeek - can't create file
-        	}
-    	}
-
-		try
-    	{
-	    	FileInputStream fis = openFileInput(FILENAME);
-	    	
-	    	int ch = 0;
-	    	
-	        while( (ch = fis.read()) != -1)
-	        {
-	        	sb.append((char)ch);
-	        }
-	    	fis.close();
-	    	
-	    	groceryList = utils.getGroceryList_As_StringArray(sb);
-	    	arrayList = utils.getGroceryList_As_ArrayBuffer(groceryList);
-    	}
-    	catch(Exception e){}
-    	
-    	if(arrayList.size() == 0)
-    	{
-    		arrayList.add(new ItemLoc("empty","1"));
-    	}
-    	
-		Collections.sort(arrayList);
-    	
-    	return arrayList;
-	}
-
-    // Click listener for the Add button.
+	// Click listener for the Add button.
     private final Button.OnClickListener btnAddOnClick = new Button.OnClickListener() 
     {
         public void onClick(View v) 
         {
 			String name = ((TextView)textView).getText().toString();
-			String[] newArray;
 			
-			if(groceryList.length == 0)
+			if("".equals(name)) return;
+			
+			if(groceryList.size() == 0)
 			{
-				groceryList = new String[]{name};
-				newArray = groceryList;
+				groceryList = new ArrayList<ItemLoc>();
 			}
-			else
-			{
-				int size = utils.getSizeOfGroceryList(groceryList) + 2;
-				newArray = new String[size];
-				System.arraycopy(groceryList, 0, newArray, 0, groceryList.length);
-				newArray[size - 1] = name;
-			}
+
+			groceryList.add(new ItemLoc(name, "99", "1"));
 			
-			groceryList = newArray;
-			ArrayList<ItemLoc> sortedArray = utils.getGroceryList_As_ArrayBuffer(newArray);
-//			StringBuffer sb = utils.getSortedStringBuffer(sortedArray);
-			
-			utils.saveFile(newArray, v.getContext());
+			utils.saveFile(groceryList, v.getContext());
 
 			addCheckBoxesFromGroceryFile();
 			
@@ -224,25 +218,23 @@ public class BubbasGroceryListAppActivity extends Activity
 	{
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 		{
-			String deleteThisOne = arg0.getText().toString().substring(7).trim();
+			StringBuffer sb = new StringBuffer(arg0.getText());
+			utils.removeLeadingSpacesAndNumbers(sb);
+			String deleteThisOne = sb.toString();
 			
-			String[] newList = new String[groceryList.length - 1];
-			int j = 0;
+			ItemLoc il = null;
+			ArrayList<ItemLoc> newList = new ArrayList<ItemLoc>();
 			
-			for (int i = 0; i < groceryList.length; i++)
+			for (Iterator<ItemLoc> iterator = groceryList.iterator(); iterator.hasNext();)
 			{
-				if(groceryList[i].startsWith(deleteThisOne))
-				{ // skip this row
-				}
-				else
+				il = iterator.next();
+				if(!il.getItem().equals(deleteThisOne))
 				{
-					newList[j] = groceryList[i];
-					j = j + 1;
+					newList.add(il);
 				}
 			}
-			
 			groceryList = newList;
-			ItemLocUtils utils = new ItemLocUtils();
+			
 			utils.saveFile(groceryList, arg0.getContext());
 			
 			addCheckBoxesFromGroceryFile();
@@ -253,32 +245,26 @@ public class BubbasGroceryListAppActivity extends Activity
 	{
 		public void onItemClick(AdapterView<?> parent, View textView, int position, long id)
 		{
+			if(groceryList.size() == 0)
+			{
+				groceryList = new ArrayList<ItemLoc>();
+			}
+			
 			String name = ((TextView)textView).getText().toString();
-			String[] newArray;
-			Context context = parent.getContext();
 			
-			if(groceryList.length == 0)
-			{
-				groceryList = new String[]{name};
-				newArray = groceryList;
-			}
-			else
-			{
-				int size = utils.getSizeOfGroceryList(groceryList) + 2;
-				newArray = new String[size];
-				System.arraycopy(groceryList, 0, newArray, 0, groceryList.length);
-				newArray[size - 1] = name;
-				groceryList = newArray;
-			}
+			StringTokenizer st = new StringTokenizer(name, ",");
 			
-			ArrayList<ItemLoc> sortedArray = utils.getGroceryList_As_ArrayBuffer(newArray);
-			Collections.sort(sortedArray);
+			if(st.countTokens() < 2) st = new StringTokenizer(name + ",99", ",");
+			
+			groceryList.add(new ItemLoc(st.nextToken(), st.nextToken(), "1"));
+			
+			Collections.sort(groceryList);
 			
 			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
 			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
 			atv.setText("");
 	        
-	        utils.saveFile(groceryList, context);
+	        utils.saveFile(groceryList, parent.getContext());
 	        
 	        addCheckBoxesFromGroceryFile();
 		}
@@ -398,7 +384,7 @@ public class BubbasGroceryListAppActivity extends Activity
 	{             
 		SmsManager sms = SmsManager.getDefault();
 		
-		ArrayList<ItemLoc> list = readGroceryListFile();
+		ArrayList<ItemLoc> list = utils.readGroceryListFile(this);
 		StringBuffer sb = new StringBuffer(list.size());
 		sb.append("\n");
         ItemLoc ele;
