@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +44,10 @@ public class EditTextMsgNumbersActivity extends Activity
 		txt2.setText(parsedTxtMsgNbrs[1]);		
 		txt3.setText(parsedTxtMsgNbrs[2]);
 
+//		txt1.setInputType(InputType.TYPE_CLASS_PHONE);
+//		txt3.setInputType(InputType.TYPE_CLASS_PHONE);
+//		txt2.setInputType(InputType.TYPE_CLASS_PHONE);
+		
 		saveButton = (Button) findViewById(R.id.save2);
 		saveButton.setOnClickListener(btnSaveOnClick);
 		

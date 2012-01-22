@@ -24,4 +24,10 @@
 	    android:menuCategory="container"
 	    android:title="text 3" 
 	    android:visible="true"/>
+    <item  
+	    android:id="@+id/exit" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="exit" 
+	    android:visible="true"/>
 </menu>

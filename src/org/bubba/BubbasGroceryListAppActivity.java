@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -60,6 +61,7 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	getResources().getStringArray(R.array.food_array));
 		    textView.setAdapter(adapter);
 		    textView.setOnItemClickListener(new OnitemClick());
+		    textView.setInputType(InputType.TYPE_CLASS_TEXT);
 		    editAndAddLL.addView(textView, 0);
 		    
 		    Button addButton = new Button(this);
@@ -120,6 +122,7 @@ public class BubbasGroceryListAppActivity extends Activity
 				itemDesc.setText(ele.getQuantity());
 				itemDesc.setLayoutParams(right);
 				itemDesc.setId(i + 99);
+				itemDesc.setInputType(InputType.TYPE_CLASS_NUMBER);
 				itemDesc.setOnFocusChangeListener(new OnFocusChangeListener()
 				{
 					@Override
@@ -174,6 +177,11 @@ public class BubbasGroceryListAppActivity extends Activity
 								Collections.sort(groceryList);
 								utils.saveFile(groceryList, v.getContext());
 							}
+						}
+						else
+						{
+							EditText et = (EditText)v;
+							et.setText("");
 						}
 					}
 				});
@@ -285,11 +293,15 @@ public class BubbasGroceryListAppActivity extends Activity
 	{
 	    switch (item.getItemId())
 	    {
-		    case R.id.textgrocerylist1:
-		    	sendTextMsg(getTxtPhoneNbr(0));
-		    	return true;
-		    	
-		    case R.id.textgrocerylist2:
+	    case R.id.exit:
+	    	this.finish();
+	    	return true;
+	    	
+	    case R.id.textgrocerylist1:
+	    	sendTextMsg(getTxtPhoneNbr(0));
+	    	return true;
+	    	
+	    case R.id.textgrocerylist2:
 		    	sendTextMsg(getTxtPhoneNbr(1));
 		    	return true;
 		    	
@@ -297,15 +309,6 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	sendTextMsg(getTxtPhoneNbr(2));
 		    	return true;
 		    	
-//		    case R.id.cleargrocerylist:
-//		    	txt1.setText("");
-//		    	
-//		    	for (int i = 0; i < groceryList.length; i++)
-//				{
-//		    		groceryList = new String[]{};
-//				}
-//		    	
-//		    	return true;
 		    case R.id.editTextMsgNbrlist:
                 Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
                 startActivityForResult(myIntent, 0);

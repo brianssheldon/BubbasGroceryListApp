@@ -8,18 +8,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
+        android:inputType="number"
         android:background="@android:drawable/editbox_background"/>
     <EditText
         android:id="@+id/entry2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/entry1"
+        android:inputType="number"
         android:background="@android:drawable/editbox_background"/>
     <EditText
         android:id="@+id/entry3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/entry2"
+        android:inputType="number"
         android:background="@android:drawable/editbox_background"/>
     <Button
         android:id="@+id/save2"
