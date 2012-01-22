@@ -126,10 +126,11 @@ public class ItemLocUtils
 	{
     	try
     	{
-//			ArrayList<ItemLoc> list = new ArrayList<ItemLoc>();
-//			list.add(new ItemLoc("veLveeta", "1", "1"));
-//			list.add(new ItemLoc("taco shells", "7", "1"));
-//			list.add(new ItemLoc("milk", "6", "3"));
+    		if(groceryList.size() > 1
+    				&& groceryList.contains(new ItemLoc("empty","1", "1")))
+    		{
+	    		groceryList.remove(new ItemLoc("empty","1", "1"));
+	    	}
 			
     		FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
 			ObjectOutputStream out = new ObjectOutputStream(fos);

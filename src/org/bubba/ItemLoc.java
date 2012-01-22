@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class ItemLoc implements Comparable<Object>, Serializable
 {
+	private static final long serialVersionUID = 666L;
 	private String aisle;
 	private String item;
 	private String quantity;
@@ -40,6 +41,16 @@ public class ItemLoc implements Comparable<Object>, Serializable
 		b = "000".substring(0, 3 - b.length()) + b;
 		
 		return a.compareTo(b);
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		ItemLoc other = (ItemLoc)o;
+		
+		return aisle.equals(other.getAisle())
+				&& item.equals(other.getItem())
+				&& quantity.equals(other.getQuantity());
 	}
 	
 	public String getAisle()
