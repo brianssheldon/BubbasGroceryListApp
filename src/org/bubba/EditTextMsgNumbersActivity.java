@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 
 public class EditTextMsgNumbersActivity extends Activity
 {
@@ -43,10 +41,6 @@ public class EditTextMsgNumbersActivity extends Activity
 		txt1.setText(parsedTxtMsgNbrs[0]);		
 		txt2.setText(parsedTxtMsgNbrs[1]);		
 		txt3.setText(parsedTxtMsgNbrs[2]);
-
-//		txt1.setInputType(InputType.TYPE_CLASS_PHONE);
-//		txt3.setInputType(InputType.TYPE_CLASS_PHONE);
-//		txt2.setInputType(InputType.TYPE_CLASS_PHONE);
 		
 		saveButton = (Button) findViewById(R.id.save2);
 		saveButton.setOnClickListener(btnSaveOnClick);
@@ -105,7 +99,7 @@ public class EditTextMsgNumbersActivity extends Activity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.editfoodlistmenu, menu); 
+	    inflater.inflate(R.menu.edittextmsgnbrmenu, menu); 
 	    return true;
 	}
 	
