@@ -168,8 +168,6 @@ public class BubbasGroceryListAppActivity extends Activity
 								{
 									break;
 								}
-								
-								String asdaaadd = "";
 							}
 							
 							if(recordUpdated)
@@ -188,10 +186,6 @@ public class BubbasGroceryListAppActivity extends Activity
 				row.addView(itemDesc);
 				
 	            ll.addView(row);
-			}
-			else
-			{
-				String x = "";
 			}
 		}
 	}
@@ -305,19 +299,33 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	sendTextMsg(getTxtPhoneNbr(1));
 		    	return true;
 		    	
-		    case R.id.textgrocerylist3:
-		    	sendTextMsg(getTxtPhoneNbr(2));
-		    	return true;
-		    	
-		    case R.id.editTextMsgNbrlist:
-                Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
-                startActivityForResult(myIntent, 0);
-		    	
-		    	return true;
-		    default:
-		        return super.onOptionsItemSelected(item);
+	    case R.id.textgrocerylist3:
+	    	sendTextMsg(getTxtPhoneNbr(2));
+	    	return true;
+	    	
+	    case R.id.editTextMsgNbrlist:
+            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
+            startActivityForResult(myIntent, 0);
+	    	return true;
+	    	
+	    case R.id.addFromBigList:
+	    	Intent bigListIntent = new Intent(this, BigListActivity.class);
+	    	startActivityForResult(bigListIntent, 0);
+	    	addCheckBoxesFromGroceryFile();
+	    	return true;
+	    	
+	    default:
+	        return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	@Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
+	     super.onActivityResult(requestCode, resultCode, data);
+	
+	     addCheckBoxesFromGroceryFile();
+    }
 
 	private String getTxtPhoneNbr(int i)
 	{

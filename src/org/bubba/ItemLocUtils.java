@@ -36,21 +36,22 @@ public class ItemLocUtils
     	}
 	}
 
-	void makeSureGroceryFileExists(BubbasGroceryListAppActivity bubbasGroceryListAppActivity)//, String FILENAME)
+	void makeSureGroceryFileExists(Context context)
 	{
 		try
 		{
-	        FileInputStream fis = bubbasGroceryListAppActivity.openFileInput(FILENAME);
+	        FileInputStream fis = context.openFileInput(FILENAME);
 	    	fis.close();
 		}
 		catch(Exception e)
 		{
 			try
 			{
+				
 				ArrayList<ItemLoc> list = new ArrayList<ItemLoc>();
 				list.add(new ItemLoc("empty", "1", "1"));
 				
-	    		FileOutputStream fos = bubbasGroceryListAppActivity.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+	    		FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
 				ObjectOutputStream out = new ObjectOutputStream(fos);
 				out.writeObject(list);
 				out.close();
@@ -63,15 +64,15 @@ public class ItemLocUtils
 		}
 	}
 
-	ArrayList<ItemLoc> readGroceryListFile(BubbasGroceryListAppActivity bubbasGroceryListAppActivity)
+	ArrayList<ItemLoc> readGroceryListFile(Context context)
 	{
 		ArrayList<ItemLoc> arrayList = new ArrayList<ItemLoc>();
 		
-		makeSureGroceryFileExists(bubbasGroceryListAppActivity);
+//		makeSureGroceryFileExists(bubbasGroceryListAppActivity);
 	
 		try
 		{
-	    	FileInputStream fix = bubbasGroceryListAppActivity.openFileInput(FILENAME);
+	    	FileInputStream fix = context.openFileInput(FILENAME);
 	    	ObjectInputStream in = new ObjectInputStream(fix);
 	    	arrayList = (ArrayList<ItemLoc>) in.readObject();
 		}

@@ -6,6 +6,12 @@
 	    android:menuCategory="container"
 	    android:title="edit text msg nbrs" 
 	    android:visible="true"/>
+     <item  
+	    android:id="@+id/addFromBigList" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="add from big list" 
+	    android:visible="true"/>
     <item  
 	    android:id="@+id/textgrocerylist1"
     	android:enabled="true" 

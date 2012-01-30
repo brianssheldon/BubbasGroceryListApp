@@ -30,12 +30,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/entry3"
         android:layout_marginLeft="10dip"
-        android:text="save" />
+        android:text="@string/save_label"/>
     <Button
         android:id="@+id/exit2"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/entry3"
         android:layout_toRightOf="@id/save2"
-        android:text="exit" />
+        android:text="@string/exit_label"/>
 </RelativeLayout>

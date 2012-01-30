@@ -38,4 +38,6 @@
         <item>salsa - mild,2</item>
         <item>velveeta,1</item>
 	</string-array>
+        <string name="save_label">save</string>
+        <string name="exit_label">exit</string>
 </resources>
