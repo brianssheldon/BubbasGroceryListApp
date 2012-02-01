@@ -1,8 +1,5 @@
 package org.bubba;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,13 +8,11 @@ import java.util.StringTokenizer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -37,7 +32,7 @@ public class BubbasGroceryListAppActivity extends Activity
 	private ItemLocUtils utils = new ItemLocUtils();
 	private static AutoCompleteTextView textView;
 	ArrayList<ItemLoc> groceryList = new ArrayList<ItemLoc>();
-	private LinearLayout ll;
+	public LinearLayout ll;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -123,66 +118,7 @@ public class BubbasGroceryListAppActivity extends Activity
 				itemDesc.setLayoutParams(right);
 				itemDesc.setId(i + 99);
 				itemDesc.setInputType(InputType.TYPE_CLASS_NUMBER);
-				itemDesc.setOnFocusChangeListener(new OnFocusChangeListener()
-				{
-					@Override
-					public void onFocusChange(View v,boolean hasFocus)
-					{ /* When focus is lost check that the text field has valid values. */
-						updateQuantity(v, hasFocus);
-					}
-
-					void updateQuantity(View v, boolean hasFocus) 
-					{
-						if (!hasFocus)
-						{
-							RelativeLayout child;
-							int cc = ll.getChildCount();
-
-							boolean recordUpdated = false;
-							
-							for (int j = 1; j < cc; j++)
-							{
-								child = (RelativeLayout) ll.getChildAt(j);
-								CheckBox cb2 = (CheckBox) child.getChildAt(0);
-								EditText et2 = (EditText) child.getChildAt(1);
-								
-								StringBuffer cbDesc = new StringBuffer( 
-										cb2.getText().toString().trim());
-								String newQty = et2.getText().toString();
-								utils.removeLeadingSpacesAndNumbers(cbDesc);						
-								
-								for (Iterator<ItemLoc> iter = groceryList.iterator(); iter.hasNext();)
-								{
-									ItemLoc itemLoc = (ItemLoc) iter.next();
-									
-									if(itemLoc.getItem().contains(cbDesc)
-											&& !itemLoc.getQuantity().equals(newQty))
-									{
-										itemLoc.setQuantity(newQty);
-										recordUpdated = true;
-										break;
-									}
-								}
-								
-								if(recordUpdated)
-								{
-									break;
-								}
-							}
-							
-							if(recordUpdated)
-							{
-								Collections.sort(groceryList);
-								utils.saveFile(groceryList, v.getContext());
-							}
-						}
-						else
-						{
-							EditText et = (EditText)v;
-							et.setText("");
-						}
-					}
-				});
+				itemDesc.setOnFocusChangeListener(new QuantityOnFocusChangeListener());
 				row.addView(itemDesc);
 				
 	            ll.addView(row);
@@ -285,6 +221,8 @@ public class BubbasGroceryListAppActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+    	SendTextMessage stm = new SendTextMessage();
+    	
 	    switch (item.getItemId())
 	    {
 	    case R.id.exit:
@@ -292,15 +230,15 @@ public class BubbasGroceryListAppActivity extends Activity
 	    	return true;
 	    	
 	    case R.id.textgrocerylist1:
-	    	sendTextMsg(getTxtPhoneNbr(0));
+	    	stm.sendTextMsg(0 ,this, groceryList);
 	    	return true;
 	    	
 	    case R.id.textgrocerylist2:
-		    	sendTextMsg(getTxtPhoneNbr(1));
+	    	stm.sendTextMsg(0 ,this, groceryList);
 		    	return true;
 		    	
 	    case R.id.textgrocerylist3:
-	    	sendTextMsg(getTxtPhoneNbr(2));
+	    	stm.sendTextMsg(0 ,this, groceryList);
 	    	return true;
 	    	
 	    case R.id.editTextMsgNbrlist:
@@ -321,92 +259,9 @@ public class BubbasGroceryListAppActivity extends Activity
 	
 	@Override
     public void onActivityResult(int requestCode,int resultCode,Intent data)
-    {
+    {	// after we get back from BigListActivity etc, reload page
 	     super.onActivityResult(requestCode, resultCode, data);
 	
 	     addCheckBoxesFromGroceryFile();
     }
-
-	private String getTxtPhoneNbr(int i)
-	{
-		String[] parsedTxtMsgNbrs = parseTxtMsgNbrs(readTextMsgNumbersFile().toString());
-		
-		return parsedTxtMsgNbrs[i];
-	}
-
-	private String[] parseTxtMsgNbrs(String readTxtMsgNbrs)
-	{
-		String[] nbrs = new String[]{" ", " ", " "};
-		
-		if(null == readTxtMsgNbrs || "".equals(readTxtMsgNbrs.trim()))
-		{
-			return nbrs;
-		}
-		
-		StringTokenizer st = new StringTokenizer(readTxtMsgNbrs, "|");
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if(st.hasMoreElements())
-			{
-				nbrs[i] = st.nextToken();
-			}
-			else
-			{
-				nbrs[i] = " ";
-			}
-		}
-				
-		return nbrs;
-	}
-	
-	private CharSequence readTextMsgNumbersFile()
-	{
-		StringBuffer record = new StringBuffer();
-		
-		try
-		{
-	    	int ch = 0;
-			FileInputStream fis = openFileInput("tstMsgNbrlist.txt");
-			while( (ch = fis.read()) != -1)
-	        {
-	        	record.append((char)ch);
-	        }
-	    	fis.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		
-		if(record.length() ==0)
-		{
-			record.append(" | | ");
-		}
-		
-    	return record;
-	}
-	
-	private void sendTextMsg(String phonenbr)
-	{             
-		SmsManager sms = SmsManager.getDefault();
-		
-		ArrayList<ItemLoc> list = utils.readGroceryListFile(this);
-		StringBuffer sb = new StringBuffer(list.size());
-		sb.append("\n");
-        ItemLoc ele;
-        
-        for (int i = 0; i < list.size(); i++)
-		{
-			ele = list.get(i);
-            sb.append(ele.toString() + "\n");
-		}
-        
-		String string = sb.toString();
-		sms.sendTextMessage(phonenbr, null, string, null, null);
-	}
 }
