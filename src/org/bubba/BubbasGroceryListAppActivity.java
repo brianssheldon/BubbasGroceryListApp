@@ -38,7 +38,7 @@ public class BubbasGroceryListAppActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-    
+        
         ScrollView sv = new ScrollView(this);
 
         ll = new LinearLayout(this);
@@ -214,7 +214,36 @@ public class BubbasGroceryListAppActivity extends Activity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.mainmenu, menu); 
+	    
+	    TextMsgUtils textUtils = new TextMsgUtils();
+	    
+	    String textNbrsString = textUtils.readTextMsgNumbersFile(getApplicationContext()).toString();
+	    String[] textNbrs = textUtils.parseTxtMsgNbrs(textNbrsString);
+	    
+	    for (int i = 0; i < textNbrs.length; i++)
+	    {
+			menu.add(9, i + 1, i, textNbrs[i]);
+		}
+
+	    inflater.inflate(R.menu.mainmenu, menu);
+	    
+	    return true;
+	}
+	
+	public boolean onPrepareOptionsMenu (Menu menu)
+	{
+		menu.removeGroup(9);
+		    
+	    TextMsgUtils textUtils = new TextMsgUtils();
+	    
+	    String textNbrsString = textUtils.readTextMsgNumbersFile(getApplicationContext()).toString();
+	    String[] textNbrs = textUtils.parseTxtMsgNbrs(textNbrsString);
+	    
+	    for (int i = 0; i < textNbrs.length; i++)
+	    {
+			menu.add(9, i + 1, i, textNbrs[i]);
+		}
+	    
 	    return true;
 	}
 	
@@ -222,38 +251,34 @@ public class BubbasGroceryListAppActivity extends Activity
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
     	SendTextMessage stm = new SendTextMessage();
-    	
-	    switch (item.getItemId())
+
+	    int itemId = item.getItemId();
+	    
+		switch (itemId)
 	    {
-	    case R.id.exit:
-	    	this.finish();
-	    	return true;
-	    	
-	    case R.id.textgrocerylist1:
-	    	stm.sendTextMsg(0 ,this, groceryList);
-	    	return true;
-	    	
-	    case R.id.textgrocerylist2:
-	    	stm.sendTextMsg(0 ,this, groceryList);
+		    case R.id.exit:
+		    	this.finish();
+		    	return true;
+	
+		    case 1:
+		    case 2:
+		    case 3:
+		    	stm.sendTextMsg(item.getTitle().toString(), this, groceryList);
 		    	return true;
 		    	
-	    case R.id.textgrocerylist3:
-	    	stm.sendTextMsg(0 ,this, groceryList);
-	    	return true;
-	    	
-	    case R.id.editTextMsgNbrlist:
-            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
-            startActivityForResult(myIntent, 0);
-	    	return true;
-	    	
-	    case R.id.addFromBigList:
-	    	Intent bigListIntent = new Intent(this, BigListActivity.class);
-	    	startActivityForResult(bigListIntent, 0);
-	    	addCheckBoxesFromGroceryFile();
-	    	return true;
-	    	
-	    default:
-	        return super.onOptionsItemSelected(item);
+		    case R.id.editTextMsgNbrlist:
+	            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
+	            startActivityForResult(myIntent, 0);
+		    	return true;
+		    	
+		    case R.id.addFromBigList:
+		    	Intent bigListIntent = new Intent(this, BigListActivity.class);
+		    	startActivityForResult(bigListIntent, 0);
+		    	addCheckBoxesFromGroceryFile();
+		    	return true;
+		    	
+		    default:
+		        return super.onOptionsItemSelected(item);
 	    }
 	}
 	

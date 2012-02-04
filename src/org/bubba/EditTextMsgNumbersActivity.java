@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,7 +35,8 @@ public class EditTextMsgNumbersActivity extends Activity
         txt2 = (EditText) findViewById(R.id.entry2);
         txt3 = (EditText) findViewById(R.id.entry3);
 		
-		String[] parsedTxtMsgNbrs = parseTxtMsgNbrs(readTextMsgNumbersFile().toString());
+        TextMsgUtils textUtils = new TextMsgUtils();
+		String[] parsedTxtMsgNbrs = textUtils.parseTxtMsgNbrs(readTextMsgNumbersFile().toString());
 		
 		txt1.setText(parsedTxtMsgNbrs[0]);		
 		txt2.setText(parsedTxtMsgNbrs[1]);		
@@ -68,32 +68,6 @@ public class EditTextMsgNumbersActivity extends Activity
             finish();
         }
     };
-
-	private String[] parseTxtMsgNbrs(String readTxtMsgNbrs)
-	{
-		String[] nbrs = new String[]{" ", " ", " "};
-		
-		if(null == readTxtMsgNbrs || "".equals(readTxtMsgNbrs.trim()))
-		{
-			return nbrs;
-		}
-		
-		StringTokenizer st = new StringTokenizer(readTxtMsgNbrs, "|");
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if(st.hasMoreElements())
-			{
-				nbrs[i] = st.nextToken();
-			}
-			else
-			{
-				nbrs[i] = " ";
-			}
-		}
-				
-		return nbrs;
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)

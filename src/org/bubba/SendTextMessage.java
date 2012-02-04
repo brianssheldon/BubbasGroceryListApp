@@ -10,14 +10,6 @@ import android.telephony.SmsManager;
 
 public class SendTextMessage
 {
-
-	String getTxtPhoneNbr(int i, BubbasGroceryListAppActivity act)
-	{
-		String[] parsedTxtMsgNbrs = parseTxtMsgNbrs(readTextMsgNumbersFile(act).toString());
-		
-		return parsedTxtMsgNbrs[i];
-	}
-
 	String[] parseTxtMsgNbrs(String readTxtMsgNbrs)
 	{
 		String[] nbrs = new String[]{" ", " ", " "};
@@ -75,9 +67,8 @@ public class SendTextMessage
     	return record;
 	}
 	
-	void sendTextMsg(int nbr, BubbasGroceryListAppActivity act, ArrayList<ItemLoc> list)
+	void sendTextMsg(String nbr, BubbasGroceryListAppActivity act, ArrayList<ItemLoc> list)
 	{
-		String phonenbr = getTxtPhoneNbr(nbr, act);
 		SmsManager sms = SmsManager.getDefault();
 		
 		StringBuffer sb = new StringBuffer(list.size());
@@ -91,24 +82,6 @@ public class SendTextMessage
 		}
         
 		String string = sb.toString();
-		sms.sendTextMessage(phonenbr, null, string, null, null);
+		sms.sendTextMessage(nbr, null, string, null, null);
 	}
-	
-//	void sendTextMsg(String phonenbr, ArrayList<ItemLoc> list)
-//	{             
-//		SmsManager sms = SmsManager.getDefault();
-//		
-//		StringBuffer sb = new StringBuffer(list.size());
-//		sb.append("\n");
-//        ItemLoc ele;
-//        
-//        for (int i = 0; i < list.size(); i++)
-//		{
-//			ele = list.get(i);
-//            sb.append(ele.toString() + "\n");
-//		}
-//        
-//		String string = sb.toString();
-//		sms.sendTextMessage(phonenbr, null, string, null, null);
-//	}
 }

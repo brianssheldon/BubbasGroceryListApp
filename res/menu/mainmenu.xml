@@ -13,24 +13,6 @@
 	    android:title="add from big list" 
 	    android:visible="true"/>
     <item  
-	    android:id="@+id/textgrocerylist1"
-    	android:enabled="true" 
-	    android:menuCategory="container"
-	    android:title="text 1" 
-	    android:visible="true"/>
-    <item  
-	    android:id="@+id/textgrocerylist2" 
-    	android:enabled="true" 
-	    android:menuCategory="container"
-	    android:title="text 2" 
-	    android:visible="true"/>
-    <item  
-	    android:id="@+id/textgrocerylist3" 
-    	android:enabled="true" 
-	    android:menuCategory="container"
-	    android:title="text 3" 
-	    android:visible="true"/>
-    <item  
 	    android:id="@+id/exit" 
     	android:enabled="true" 
 	    android:menuCategory="container"
