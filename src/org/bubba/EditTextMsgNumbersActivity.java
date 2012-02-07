@@ -131,7 +131,7 @@ public class EditTextMsgNumbersActivity extends Activity
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			saveFile();
 		} 
 		catch (IOException e)
 		{
