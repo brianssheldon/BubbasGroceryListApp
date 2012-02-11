@@ -39,13 +39,13 @@ public class BubbasGroceryListAppActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         
-        ScrollView sv = new ScrollView(this);
+        ScrollView sv = new ScrollView(this); // main view
 
-        ll = new LinearLayout(this);
+        ll = new LinearLayout(this); // everything else goes in this view. do I need sv too?
         ll.setOrientation(LinearLayout.VERTICAL);
-        sv.addView(ll, 0);
+        sv.addView(ll, 0);	// add ll to sv view
         
-        LinearLayout editAndAddLL = new LinearLayout(this);
+        LinearLayout editAndAddLL = new LinearLayout(this);	// contains text view and add button
         editAndAddLL.setOrientation(LinearLayout.HORIZONTAL);
         
 	        textView = new AutoCompleteTextView(this);
@@ -62,10 +62,10 @@ public class BubbasGroceryListAppActivity extends Activity
 		    Button addButton = new Button(this);
 		    addButton.setText("Add");
 		    addButton.setWidth(90);
-		    addButton.setOnClickListener(btnAddOnClick);
+		    addButton.setOnClickListener(btnAddOnClick);	// add button listener
 		    editAndAddLL.addView(addButton, 1);
 	    
-	    ll.addView(editAndAddLL, 0);
+	    ll.addView(editAndAddLL, 0);	// add list view that contains text view and add button 
         
         addCheckBoxesFromGroceryFile();
         
@@ -76,52 +76,53 @@ public class BubbasGroceryListAppActivity extends Activity
 	{
 		while (ll.getChildCount() > 1)
 		{
-			ll.removeViewAt(1);
+			ll.removeViewAt(1);	// remove all the checkboxes
 		}
 		
-		RelativeLayout row;
-		EditText itemDesc;
+		RelativeLayout row; // holds checkbox and qty text view
+		CheckBox cb;		// checkbox
+		EditText itemQty;	// qty text view
 		
 		RelativeLayout.LayoutParams left = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		left.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		left.width = 400;
+		left.width = 400;	// could just use as 1st parm to 'left' variable
 		
 		RelativeLayout.LayoutParams right = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		right.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		right.width = 60;
+		right.width = 60;	// could just use as 1st parm to 'right' variable
 		
-		groceryList = utils.readGroceryListFile(this);
+		groceryList = utils.readGroceryListFile(this); // arraylist of ItemLoc pojo's
         ItemLoc ele;
         
         for (int i = 0; i < groceryList.size(); i++)
 		{
-        	row = new RelativeLayout(this);
+        	row = new RelativeLayout(this);	// make a new row
 			
-			ele = groceryList.get(i);
+			ele = groceryList.get(i);	// get next ItemLoc pojo
 			
-			if(!"".equals(ele.toString()))
+			if(!"".equals(ele.toString()))	// if ItemLoc is not blank, add it to the row
 			{			
-				CheckBox cb = new CheckBox(this);
+				cb = new CheckBox(this);
 	            cb.setId(i);
 	            cb.setText(ele.getAisle() +  "  " + ele.getItem());
 	            cb.setSoundEffectsEnabled(true);
-	            cb.setButtonDrawable(R.drawable.trashcan);
-	            cb.setLayoutParams(left);
-				cb.setOnCheckedChangeListener(new DeleteRowListener());
+	            cb.setButtonDrawable(R.drawable.trashcan);	// trashcan icon
+	            cb.setLayoutParams(left);	// place on left side of view
+				cb.setOnCheckedChangeListener(new DeleteRowListener()); // add checked listener
 				
-				row.addView(cb);//, left);
+				row.addView(cb);	// add cb to row view
 				
-				itemDesc = new EditText(this);
-				itemDesc.setText(ele.getQuantity());
-				itemDesc.setLayoutParams(right);
-				itemDesc.setId(i + 99);
-				itemDesc.setInputType(InputType.TYPE_CLASS_NUMBER);
-				itemDesc.setOnFocusChangeListener(new QuantityOnFocusChangeListener());
-				row.addView(itemDesc);
+				itemQty = new EditText(this);
+				itemQty.setText(ele.getQuantity());
+				itemQty.setLayoutParams(right);	// place on right side of view
+				itemQty.setId(i + 99);	// not needed?
+				itemQty.setInputType(InputType.TYPE_CLASS_NUMBER); // use the nbr keyboard for this view
+				itemQty.setOnFocusChangeListener(new QuantityOnFocusChangeListener()); // add listener
+				row.addView(itemQty); // add qty view to row
 				
-	            ll.addView(row);
+	            ll.addView(row);	// add row to list view
 			}
 		}
 	}
@@ -133,19 +134,21 @@ public class BubbasGroceryListAppActivity extends Activity
         {
 			String name = ((TextView)textView).getText().toString();
 			
-			if("".equals(name)) return;
+			if("".equals(name)) return; // bail if nothing is entered
 			
 			if(groceryList.size() == 0)
 			{
 				groceryList = new ArrayList<ItemLoc>();
 			}
 
-			groceryList.add(new ItemLoc(name, "99", "1"));
+			groceryList.add(new ItemLoc(name, "99", "1"));	// since they hit the add button, 
+															// we don't know the aisle so use 99
 			
-			utils.saveFile(groceryList, v.getContext());
+			utils.saveFile(groceryList, v.getContext());	// save arraylist of ItemLoc's to file
 
-			addCheckBoxesFromGroceryFile();
+			addCheckBoxesFromGroceryFile(); // repopulate the screen
 			
+			// get the edit view so we can clear the contents since they added what was there.
 			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
 			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
 			atv.setText("");
@@ -155,9 +158,9 @@ public class BubbasGroceryListAppActivity extends Activity
 	private final class DeleteRowListener implements OnCheckedChangeListener
 	{
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1)
-		{
-			StringBuffer sb = new StringBuffer(arg0.getText());
-			utils.removeLeadingSpacesAndNumbers(sb);
+		{	// they have clicked on the checkbox so remove this row - ***removes all occurences***
+			StringBuffer sb = new StringBuffer(arg0.getText()); // get value of the checkbox text
+			utils.removeLeadingSpacesAndNumbers(sb); // clean up sb for comparison
 			String deleteThisOne = sb.toString();
 			
 			ItemLoc il = null;
@@ -168,36 +171,39 @@ public class BubbasGroceryListAppActivity extends Activity
 				il = iterator.next();
 				if(!il.getItem().equals(deleteThisOne))
 				{
-					newList.add(il);
+					newList.add(il);	// add rows to new list - except the one they selected
 				}
 			}
 			groceryList = newList;
 			
 			utils.saveFile(groceryList, arg0.getContext());
 			
-			addCheckBoxesFromGroceryFile();
+			addCheckBoxesFromGroceryFile();	// repaint screen now that we've removed a row
 		}
 	}
 	
     private final class OnitemClick implements OnItemClickListener
 	{
 		public void onItemClick(AdapterView<?> parent, View textView, int position, long id)
-		{
+		{	// they have selected an item from the dropdown list. add it to the grocery list
 			if(groceryList.size() == 0)
-			{
+			{	// make sure groceryList is not empty
 				groceryList = new ArrayList<ItemLoc>();
 			}
 			
-			String name = ((TextView)textView).getText().toString();
+			String name = ((TextView)textView).getText().toString(); // get selected item
 			
-			StringTokenizer st = new StringTokenizer(name, ",");
+			StringTokenizer st = new StringTokenizer(name, ","); // split into item and aisle
 			
-			if(st.countTokens() < 2) st = new StringTokenizer(name + ",99", ",");
+			// make sure st has 2 tokens, aisle and item desc.
+			if(st.countTokens() < 2) st = new StringTokenizer(name + ",99", ","); 
 			
+			// add item to groceryList and set quantity to 1
 			groceryList.add(new ItemLoc(st.nextToken(), st.nextToken(), "1"));
 			
-			Collections.sort(groceryList);
+			Collections.sort(groceryList); // seems like I shouldn't have to do this here 
 			
+			// erase text view text
 			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
 			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
 			atv.setText("");
@@ -212,18 +218,10 @@ public class BubbasGroceryListAppActivity extends Activity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	{	// only called once - creates the menu
 	    MenuInflater inflater = getMenuInflater();
 	    
-	    TextMsgUtils textUtils = new TextMsgUtils();
-	    
-	    String textNbrsString = textUtils.readTextMsgNumbersFile(getApplicationContext()).toString();
-	    String[] textNbrs = textUtils.parseTxtMsgNbrs(textNbrsString);
-	    
-	    for (int i = 0; i < textNbrs.length; i++)
-	    {
-			menu.add(9, i + 1, i, textNbrs[i]);
-		}
+	    addToMenu(menu);
 
 	    inflater.inflate(R.menu.mainmenu, menu);
 	    
@@ -231,10 +229,18 @@ public class BubbasGroceryListAppActivity extends Activity
 	}
 	
 	public boolean onPrepareOptionsMenu (Menu menu)
-	{
-		menu.removeGroup(9);
+	{	// called everytime menu is launched. If textMsg nbrs have changed, 
+		// I need to repopulate the text.
+		menu.removeGroup(9); // remove existing textMsg Nbrs from menu
 		    
-	    TextMsgUtils textUtils = new TextMsgUtils();
+	    addToMenu(menu); // add textMsg Nbrs to menu
+	    
+	    return true;
+	}
+
+	void addToMenu(Menu menu)
+	{
+		TextMsgUtils textUtils = new TextMsgUtils();
 	    
 	    String textNbrsString = textUtils.readTextMsgNumbersFile(getApplicationContext()).toString();
 	    String[] textNbrs = textUtils.parseTxtMsgNbrs(textNbrsString);
@@ -243,13 +249,11 @@ public class BubbasGroceryListAppActivity extends Activity
 	    {
 			menu.add(9, i + 1, i, textNbrs[i]);
 		}
-	    
-	    return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	{	// called when they have selected a menu option
     	SendTextMessage stm = new SendTextMessage();
 
 	    int itemId = item.getItemId();
@@ -257,7 +261,7 @@ public class BubbasGroceryListAppActivity extends Activity
 		switch (itemId)
 	    {
 		    case R.id.exit:
-		    	this.finish();
+		    	this.finish(); // quit app. is this good or bad??
 		    	return true;
 	
 		    case 1:
@@ -266,12 +270,12 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	stm.sendTextMsg(item.getTitle().toString(), this, groceryList);
 		    	return true;
 		    	
-		    case R.id.editTextMsgNbrlist:
+		    case R.id.editTextMsgNbrlist:	// go to screen to edit phone numbers
 	            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
 	            startActivityForResult(myIntent, 0);
 		    	return true;
 		    	
-		    case R.id.addFromBigList:
+		    case R.id.addFromBigList:	// go to screen to select items from big list
 		    	Intent bigListIntent = new Intent(this, BigListActivity.class);
 		    	startActivityForResult(bigListIntent, 0);
 		    	addCheckBoxesFromGroceryFile();

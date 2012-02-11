@@ -10,7 +10,7 @@ public class AddRowListener implements OnCheckedChangeListener
 {
 	@Override
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1) 
-	{
+	{	// adds an ItemLoc pojo everytime it's selected - may cause dups...
 		String text = arg0.getText().toString();
 		if("".equals(text)) return;
 		

@@ -81,11 +81,7 @@ public class EditTextMsgNumbersActivity extends Activity
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 	    switch (item.getItemId())
-	    {
-//		    case R.id.ok:
-//		    	saveFile();
-//		        return true;
-		        
+	    {       
 		    case R.id.exit:
 		    	Intent intent = new Intent();
                 setResult(RESULT_OK, intent);

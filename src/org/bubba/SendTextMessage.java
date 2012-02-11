@@ -71,17 +71,31 @@ public class SendTextMessage
 	{
 		SmsManager sms = SmsManager.getDefault();
 		
-		StringBuffer sb = new StringBuffer(list.size());
+		StringBuffer sb = new StringBuffer(153);
 		sb.append("\n");
         ItemLoc ele;
+        int j = 0;
         
         for (int i = 0; i < list.size(); i++)
 		{
 			ele = list.get(i);
+			
+			if(150 < sb.length() + ele.toString().length())
+			{
+				sms.sendTextMessage(nbr, null, sb.toString(), null, null);
+				sb = new StringBuffer(153);
+				sb.append("\n");
+			}
             sb.append(ele.toString() + "\n");
 		}
+        sms.sendTextMessage(nbr, null, sb.toString(), null, null);
         
-		String string = sb.toString();
-		sms.sendTextMessage(nbr, null, string, null, null);
+//         NICE! split the string into sms sized chunks!
+//        ArrayList<String> divideMessage = sms.divideMessage(sb.toString());
+//        
+//		for (int i = 0; i < divideMessage.size(); i++)
+//		{
+//			sms.sendTextMessage(nbr, null, divideMessage.get(i), null, null);
+//		}
 	}
 }

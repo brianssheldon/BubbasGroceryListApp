@@ -7,38 +7,134 @@
     
     <string-array name="food_array">
         <item>alfredo sauce,1</item>
+        <item>apple sauce,5</item>
+        <item>bacon,0</item>
+        <item>beer,9</item>
+        <item>beets,3</item>
+        <item>black pepper,2</item>
+        <item>bleach,8</item>
         <item>bread,0</item>
-        <item>butter,7</item>
-        <item>carrots,0</item>
+        <item>butter - parkay,7</item>
+        <item>butter - real,7</item>
+        <item>butter - spray,7</item>
+        <item>canadian bacon,0</item>
+        <item>cantelope,0</item>
+        <item>carrots - raw,0</item>
+        <item>carrots - can,0</item>
+        <item>cat food,7</item>
+        <item>cat treats,7</item>
         <item>catsup,1</item>
         <item>cellery,0</item>
         <item>cheddar - block,0</item>
+        <item>cheese - fiesta,0</item>
         <item>cheddar - shredded,0</item>
         <item>chicken nuggets,12</item>
+        <item>chicken - frozen,12</item>
         <item>chili - no beans,2</item>
         <item>chili with beans,2</item>
+        <item>chips - cheetos,9</item>
         <item>chips - doritos,9</item>
+        <item>chips - pretzels,9</item>
         <item>chips - ruffles,9</item>
+        <item>chips - tortilla,9</item>
+        <item>clorox wipes,7</item>
         <item>choc drink mix,5</item>
-        <item>coffee,6</item>
+        <item>coffee - decalf,6</item>
+        <item>coffee - regular,0</item>
+        <item>canola oil,5</item>
         <item>corn - can,3</item>
+        <item>corn - cob,8</item>
+        <item>corn - creamed,3</item>
+        <item>corn - frozen,9</item>
+        <item>cream cheese,4</item>
+        <item>croutons,4</item>
+        <item>deoderant - bs,14</item>
+        <item>deoderant - ks,14</item>
+        <item>deoderant - ls,14</item>
+        <item>dish soap - dawn,11</item>
+        <item>dishwasher soap,11</item>
+        <item>dog food,7</item>
+        <item>dog treats,7</item>
         <item>eggs,10</item>
+        <item>fish sticks,10</item>
+        <item>frozen pizza - cheese,9</item>
+        <item>frozen pizza - pepperoni,9</item>
+        <item>fruit - apple,0</item>
+        <item>fruit - banana,0</item>
+        <item>fruit - grape,0</item>
+        <item>fruit - orange,0</item>
+        <item>fruit - plum,0</item>
+        <item>garlic - clove,0</item>
+        <item>garlic salt,3</item>
         <item>green beans - can,3</item>
+        <item>gum,13</item>
+        <item>bell pepper,0</item>
         <item>hamburger,2</item>
+        <item>hamburger buns,0</item>
+        <item>hot dogs - ballpark,0</item>
+        <item>hot dogs - cheap,0</item>
+        <item>hot dog buns,0</item>
+        <item>ice cream - chocolate,0</item>
+        <item>ice cream - vanilla,0</item>
+        <item>jalepenos,3</item>
+        <item>jet dry,11</item>
         <item>ketchup,1</item>
+        <item>kleenex,14</item>
+        <item>laundry detergent,0</item>
         <item>lean pockets,11</item>
+        <item>lettuce,0</item>
+        <item>lunch meat - bologna,0</item>
+        <item>lunch meat - ham,0</item>
+        <item>lunch meat - turkey,0</item>
+        <item>lysol,8</item>
+        <item>macaroni and cheese,3</item>
+        <item>marinara,3</item>
         <item>mayo,1</item>
         <item>milk,5</item>
         <item>miracle whip,1</item>
         <item>mozerella - shredded,0</item>
+        <item>mustard,3</item>
+        <item>onion - white,0</item>
+        <item>onion - purple,0</item>
+        <item>parmesean cheese,3</item>
         <item>peas - can,3</item>
+        <item>pepperoni,0</item>
+        <item>potato,0</item>
         <item>pickles - bread n butter,1</item>
+        <item>pickles - dill,</item>
+        <item>pop - diet coke,8</item>
+        <item>pop - diet dr pepper,8</item>
+        <item>pop - diet mountain dew,8</item>
+        <item>pop - diet root beer,8</item>
+        <item>pop - dr pepper,8</item>
+        <item>pop - coke,8</item>
+        <item>pop - orangette,8</item>
+        <item>popcorn - microwave,8</item>
+        <item>popcorn - kernels,8</item>
         <item>poptarts - blueberry,5</item>
         <item>poptarts - cherry,5</item>
         <item>poptarts - smores,5</item>
+        <item>poptarts - choc,5</item>
         <item>prego,1</item>
+        <item>radishes,0</item>
+        <item>roast,3</item>
+        <item>salad dressing - french,4</item>
+        <item>salad dressing - honey mustard,4</item>
+        <item>salad dressing - thousand island,4</item>
+        <item>salad dressing - italian,4</item>
         <item>salsa - medium,2</item>
         <item>salsa - mild,2</item>
+        <item>salt,8</item>
+        <item>sausage,0</item>
+        <item>shaving cream,14</item>
+        <item>softner sheets,11</item>
+        <item>sour cream,6</item>
+        <item>soy sauce,2</item>
+        <item>toilet paper,14</item>
+        <item>tomato,0</item>
+        <item>tortillas,0</item>
         <item>velveeta,1</item>
+        <item>vitamin D,12</item>
+        <item>worchestershire sauce,1</item>
 	</string-array>
 </resources>
