@@ -55,8 +55,8 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	R.layout.list_item,
 		    	getResources().getStringArray(R.array.food_array));
 		    textView.setAdapter(adapter);
-		    textView.setOnItemClickListener(new OnitemClick());
-		    textView.setInputType(InputType.TYPE_CLASS_TEXT);
+		    textView.setOnItemClickListener(new OnitemClick()); // selected item from drop down
+		    textView.setInputType(InputType.TYPE_CLASS_TEXT); // make keyboard popup
 		    editAndAddLL.addView(textView, 0);
 		    
 		    Button addButton = new Button(this);
@@ -148,10 +148,12 @@ public class BubbasGroceryListAppActivity extends Activity
 
 			addCheckBoxesFromGroceryFile(); // repopulate the screen
 			
+			// why can't I just do this? answer - I can 
+			((TextView)textView).setText("");
 			// get the edit view so we can clear the contents since they added what was there.
-			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
-			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
-			atv.setText("");
+//			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
+//			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
+//			atv.setText("");
         }
     };
     
@@ -165,7 +167,8 @@ public class BubbasGroceryListAppActivity extends Activity
 			
 			ItemLoc il = null;
 			ArrayList<ItemLoc> newList = new ArrayList<ItemLoc>();
-			
+
+			// there has got to be a better way to do this
 			for (Iterator<ItemLoc> iterator = groceryList.iterator(); iterator.hasNext();)
 			{
 				il = iterator.next();

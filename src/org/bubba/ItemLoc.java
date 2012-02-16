@@ -15,6 +15,7 @@ public class ItemLoc implements Comparable<Object>, Serializable
 	{
 		this.item = item.replace('|', ' ');
 		this.aisle = aisle.replace('|', ' ');
+		this.quantity = "1";
 	}
 
 	public ItemLoc(String item, String aisle, String quantity)
