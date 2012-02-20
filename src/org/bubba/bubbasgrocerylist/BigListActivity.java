@@ -1,4 +1,4 @@
-package org.bubba;
+package org.bubba.bubbasgrocerylist;
 
 import android.app.Activity;
 import android.os.Bundle;

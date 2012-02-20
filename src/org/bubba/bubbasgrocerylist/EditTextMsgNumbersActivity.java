@@ -1,4 +1,4 @@
-package org.bubba;
+package org.bubba.bubbasgrocerylist;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +36,8 @@ public class EditTextMsgNumbersActivity extends Activity
         txt3 = (EditText) findViewById(R.id.entry3);
 		
         TextMsgUtils textUtils = new TextMsgUtils();
-		String[] parsedTxtMsgNbrs = textUtils.parseTxtMsgNbrs(readTextMsgNumbersFile().toString());
+		String[] parsedTxtMsgNbrs = textUtils.parseTxtMsgNbrs(
+				readTextMsgNumbersFile().toString());
 		
 		txt1.setText(parsedTxtMsgNbrs[0]);		
 		txt2.setText(parsedTxtMsgNbrs[1]);		

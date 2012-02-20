@@ -1,4 +1,4 @@
-package org.bubba;
+package org.bubba.bubbasgrocerylist;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -206,7 +206,7 @@ public class BubbasGroceryListAppActivity extends Activity
 			
 			Collections.sort(groceryList); // seems like I shouldn't have to do this here 
 			
-			// erase text view text
+			// erase text view text - don't need all this code...
 			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
 			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
 			atv.setText("");
@@ -275,13 +275,13 @@ public class BubbasGroceryListAppActivity extends Activity
 		    	
 		    case R.id.editTextMsgNbrlist:	// go to screen to edit phone numbers
 	            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
-	            startActivityForResult(myIntent, 0);
+	            startActivityForResult(myIntent, 100);
 		    	return true;
 		    	
 		    case R.id.addFromBigList:	// go to screen to select items from big list
 		    	Intent bigListIntent = new Intent(this, BigListActivity.class);
-		    	startActivityForResult(bigListIntent, 0);
-		    	addCheckBoxesFromGroceryFile();
+		    	startActivityForResult(bigListIntent, 101);
+		    	addCheckBoxesFromGroceryFile();//dont need?
 		    	return true;
 		    	
 		    default:

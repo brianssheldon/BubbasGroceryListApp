@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.bubba"
-      android:versionCode="1"
+      package="org.bubba.bubbasgrocerylist"
+      android:versionCode="3"
       android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="15" />
+    
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application android:icon="@drawable/bubbadevil" android:label="Bubba's Grocery List App" android:debuggable="true">
         <activity android:name=".BubbasGroceryListAppActivity"
@@ -16,6 +19,4 @@
  		<activity android:name=".EditTextMsgNumbersActivity"></activity>
  		<activity android:name=".BigListActivity"></activity>
     </application>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 </manifest>

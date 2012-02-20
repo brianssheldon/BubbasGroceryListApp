@@ -1,4 +1,4 @@
-package org.bubba;
+package org.bubba.bubbasgrocerylist;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,7 +25,8 @@ public class ItemLocUtils
 	    	}
 			
     		FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			ObjectOutputStream out = new ObjectOutputStream(fos);
+//			fos.write(buffer);
+    		ObjectOutputStream out = new ObjectOutputStream(fos);
 			out.writeObject(groceryList);
 			out.close();
 	    	fos.close();
