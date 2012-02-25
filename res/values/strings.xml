@@ -140,4 +140,5 @@
         <item>vitamin D,12</item>
         <item>worchestershire sauce,1</item>
 	</string-array>
+        <string name="bubba_s_grocery_list_app">Bubba\'s Grocery List App</string>
 </resources>
