@@ -68,8 +68,6 @@ public class ItemLocUtils
 	ArrayList<ItemLoc> readGroceryListFile(Context context)
 	{
 		ArrayList<ItemLoc> arrayList = new ArrayList<ItemLoc>();
-		
-//		makeSureGroceryFileExists(bubbasGroceryListAppActivity);
 	
 		try
 		{

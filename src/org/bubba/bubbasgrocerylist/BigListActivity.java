@@ -12,8 +12,7 @@ public class BigListActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.big_list);
-        ScrollView sv = new ScrollView(this); // again with the scrollview. do I really need this?
+        ScrollView sv = new ScrollView(this); 
 
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);

@@ -44,13 +44,13 @@ public class EditTextMsgNumbersActivity extends Activity
 		txt3.setText(parsedTxtMsgNbrs[2]);
 		
 		saveButton = (Button) findViewById(R.id.save2);
-		saveButton.setOnClickListener(btnSaveOnClick);
+		saveButton.setOnClickListener(btnSaveOnClick); // look into myactivity implements onclicklistener 
 		
 		exitButton = (Button) findViewById(R.id.exit2);
 		exitButton.setOnClickListener(btnExitOnClick);
     }
     
-    // Click listener for the Add button.
+    // Click listener for the save button.
     private final Button.OnClickListener btnSaveOnClick = new Button.OnClickListener() 
     {
         public void onClick(View v) 
@@ -59,7 +59,7 @@ public class EditTextMsgNumbersActivity extends Activity
         }
     };
     
-    // Click listener for the Add button.
+    // Click listener for the exit button.
     private final Button.OnClickListener btnExitOnClick = new Button.OnClickListener() 
     {
         public void onClick(View v) 

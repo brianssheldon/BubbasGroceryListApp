@@ -6,9 +6,10 @@
 
     <uses-sdk android:minSdkVersion="2" android:targetSdkVersion="2"/>
     
-    <uses-permission android:name="android.permission.SEND_SMS" 
-        			 android:required="false"/>
-    
+    <uses-permission android:name="android.permission.SEND_SMS" android:required="false"/>
+    <uses-permission android:name="android.permission.INTERNET" android:required="false"/>
+	<!--  <uses-library android:name="com.google.android.maps" />  -->
+	
 	<supports-screens android:resizeable="true"
                   android:smallScreens="true"
                   android:normalScreens="true"
@@ -16,8 +17,8 @@
                   android:anyDensity="true"/>
 	
     <application android:icon="@drawable/bubbadevil" 
-        		 android:label="@string/bubba_s_grocery_list_app" 
-        		 android:debuggable="false">
+        		 android:label="@string/bubba_s_grocery_list_app" >
+        		 <!--  android:debuggable="true"> -->
         <activity android:name=".BubbasGroceryListAppActivity"
                   android:label="@string/bubba_s_grocery_list_app">
             <intent-filter>

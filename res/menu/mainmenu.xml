@@ -12,6 +12,12 @@
 	    android:menuCategory="container"
 	    android:title="add from big list" 
 	    android:visible="true"/>
+     <item  
+	    android:id="@+id/scanBarcode" 
+    	android:enabled="true" 
+	    android:menuCategory="container"
+	    android:title="scan barcode" 
+	    android:visible="true"/>
     <item  
 	    android:id="@+id/exit" 
     	android:enabled="true" 

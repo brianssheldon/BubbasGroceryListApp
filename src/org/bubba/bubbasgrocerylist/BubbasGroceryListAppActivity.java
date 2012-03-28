@@ -1,9 +1,20 @@
 package org.bubba.bubbasgrocerylist;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.xml.sax.InputSource;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,9 +37,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BubbasGroceryListAppActivity extends Activity
-{
+{	// listactivty  populate with an adapter
 	private ItemLocUtils utils = new ItemLocUtils();
 	private static AutoCompleteTextView textView;
 	ArrayList<ItemLoc> groceryList = new ArrayList<ItemLoc>();
@@ -49,7 +61,7 @@ public class BubbasGroceryListAppActivity extends Activity
         editAndAddLL.setOrientation(LinearLayout.HORIZONTAL);
         
 	        textView = new AutoCompleteTextView(this);
-	        textView.setWidth(400);
+	        textView.setWidth(400); // tableview or within linear layout
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 		    	this,
 		    	R.layout.list_item,
@@ -150,10 +162,6 @@ public class BubbasGroceryListAppActivity extends Activity
 			
 			// why can't I just do this? answer - I can 
 			((TextView)textView).setText("");
-			// get the edit view so we can clear the contents since they added what was there.
-//			LinearLayout linearLayout = (LinearLayout) ll.getChildAt(0);
-//			AutoCompleteTextView atv = (AutoCompleteTextView) linearLayout.getChildAt(0);
-//			atv.setText("");
         }
     };
     
@@ -230,16 +238,6 @@ public class BubbasGroceryListAppActivity extends Activity
 	    
 	    return true;
 	}
-	
-	public boolean onPrepareOptionsMenu (Menu menu)
-	{	// called everytime menu is launched. If textMsg nbrs have changed, 
-		// I need to repopulate the text.
-		menu.removeGroup(9); // remove existing textMsg Nbrs from menu
-		    
-	    addToMenu(menu); // add textMsg Nbrs to menu
-	    
-	    return true;
-	}
 
 	void addToMenu(Menu menu)
 	{
@@ -254,6 +252,16 @@ public class BubbasGroceryListAppActivity extends Activity
 		}
 	}
 	
+	public boolean onPrepareOptionsMenu (Menu menu)
+	{	// called everytime menu is launched. If textMsg nbrs have changed, 
+		// I need to repopulate the text.
+		menu.removeGroup(9); // remove existing textMsg Nbrs from menu
+		    
+	    addToMenu(menu); // add textMsg Nbrs to menu
+	    
+	    return true;
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{	// called when they have selected a menu option
@@ -264,7 +272,7 @@ public class BubbasGroceryListAppActivity extends Activity
 		switch (itemId)
 	    {
 		    case R.id.exit:
-		    	this.finish(); // quit app. is this good or bad??
+		    	this.finish(); // quit app. is this good or bad?? understand life cycle & fragments
 		    	return true;
 	
 		    case 1:
@@ -272,8 +280,19 @@ public class BubbasGroceryListAppActivity extends Activity
 		    case 3:
 		    	stm.sendTextMsg(item.getTitle().toString(), this, groceryList);
 		    	return true;
+		    
+		    case R.id.scanBarcode:
+		    	try
+		    	{
+		    		IntentIntegrator.initiateScan(this);
+		    	}
+		    	catch (Exception e)
+		    	{
+					e.printStackTrace();
+				}
+		    	return true;
 		    	
-		    case R.id.editTextMsgNbrlist:	// go to screen to edit phone numbers
+		    case R.id.editTextMsgNbrlist:	// go to screen to edit phone numbers > add to AndroidManifest.xml
 	            Intent myIntent = new Intent(this, EditTextMsgNumbersActivity.class);
 	            startActivityForResult(myIntent, 100);
 		    	return true;
@@ -288,12 +307,112 @@ public class BubbasGroceryListAppActivity extends Activity
 		        return super.onOptionsItemSelected(item);
 	    }
 	}
-	
+
+	String[] readGoogleApi(String upc)
+	{
+		String[] results = new String[25];
+
+		try
+		{
+			URL url = new URL(
+					"https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyBwV4tNao1xC68ilalkKytyXICfrPH91MA&country=US&q="
+							+ upc + "&alt=json");
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			InputStream stream = connection.getInputStream();
+			InputSource inputSource = new InputSource(stream);
+			InputStream byteStream = inputSource.getByteStream();
+
+			StringBuffer record = new StringBuffer();
+
+			int ch = 0;
+
+			while ((ch = byteStream.read()) != -1)
+			{
+				record.append((char) ch);
+			}
+
+			JSONTokener jsonTokener = new JSONTokener(record.toString());
+			try
+			{
+				JSONObject nextValue = (JSONObject) jsonTokener.nextValue();
+				JSONArray jsonArray = (JSONArray) nextValue
+						.getJSONArray("items");
+
+				for (int i = 0; i < jsonArray.length(); i++)
+				{
+					JSONObject oobbjj = (JSONObject) jsonArray.opt(i);
+					JSONObject product = (JSONObject) oobbjj.get("product");
+					results[i] = (String) product.get("title");
+				}
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return results;
+	}
+		
 	@Override
     public void onActivityResult(int requestCode,int resultCode,Intent data)
     {	// after we get back from BigListActivity etc, reload page
 	     super.onActivityResult(requestCode, resultCode, data);
-	
-	     addCheckBoxesFromGroceryFile();
+	     
+	     switch(requestCode) 
+	     {
+	     	case 101:
+	     		addCheckBoxesFromGroceryFile();
+	     		break;
+	     		
+	     	case IntentIntegrator.REQUEST_CODE: 
+		    {
+			     if (resultCode != RESULT_CANCELED) 
+			     {
+			    	 IntentResult scanResult =
+			    			 IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+			    	 if (scanResult != null) 
+			    	 {
+			    		 String upc = scanResult.getContents();
+			    		 
+			    		 Toast.makeText(getBaseContext(), "upc '" + upc + "'", 
+			                        Toast.LENGTH_SHORT).show();
+//			    		 try
+//			    		 {
+//				    		URL url = new URL(
+//										"https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyBwV4tNao1xC68ilalkKytyXICfrPH91MA&country=US&q=022000159335&alt=xml");
+//							HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//							InputStream stream = connection.getInputStream();
+//							InputSource inputSource = new InputSource(stream);
+//							String ipString = inputSource.toString();
+//							Toast.makeText(getBaseContext(), ipString, Toast.LENGTH_LONG);
+
+				    		String[] results = readGoogleApi(upc);
+				    		groceryList.add(new ItemLoc(results[0], "99", "1"));
+				    		utils.saveFile(groceryList, this);
+				    		addCheckBoxesFromGroceryFile();
+//			    		 }
+//			    		 catch (MalformedURLException e)
+//						{
+//							e.printStackTrace();
+//						}
+//						catch (IOException e)
+//						{
+//							e.printStackTrace();
+//						}
+			    		 
+			    	 }
+			     }
+		    }
+	     }
     }
 }
