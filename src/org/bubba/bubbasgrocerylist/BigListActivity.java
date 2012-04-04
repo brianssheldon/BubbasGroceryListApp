@@ -18,14 +18,14 @@ public class BigListActivity extends Activity
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll, 0);
         
-        String[] foodArray = getResources().getStringArray(R.array.food_array);
+        String[] foodArray = (new ItemLocUtils()).getKnownItemsArray(this) ;
+        		//getResources().getStringArray(R.array.food_array);
         
         for (int i = 0; i < foodArray.length; i++)
         {
 			CheckBox cb = new CheckBox(this);
 			cb.setId(i);
             cb.setText(foodArray[i]);
-            cb.setSoundEffectsEnabled(true);
 			cb.setOnCheckedChangeListener(new AddRowListener());
 			
 			ll.addView(cb);

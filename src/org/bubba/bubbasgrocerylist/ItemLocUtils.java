@@ -87,6 +87,31 @@ public class ItemLocUtils
 		return arrayList;
 	}
 
+	String[] getKnownItemsArray(Context context)
+	{
+		String[] hardCodedItems = context.getResources().getStringArray(R.array.food_array);
+		String[] scannedItems = (new KnownItemUtils()).readKnownItemsListFileAsArray(context);
+
+		int length = hardCodedItems.length;
+		int length2 = scannedItems.length;
+		
+		String[] newArray = new String[length + length2];
+
+		for (int i = 0; i < length; i++)
+		{
+			newArray[i] = hardCodedItems[i];
+		}
+		
+		int x = 0;
+		for (int i = length; i < length + scannedItems.length; i++)
+		{
+			newArray[i] = scannedItems[x];
+			x += 1;
+		}
+		
+		return newArray;
+	}
+	
 	void removeTrailingSpacesAndNumbers(StringBuffer cbDesc)
 	{
 		boolean charFound = false;

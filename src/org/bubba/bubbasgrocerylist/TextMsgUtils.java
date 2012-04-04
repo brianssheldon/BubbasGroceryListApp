@@ -49,11 +49,7 @@ public class TextMsgUtils
 	        }
 	    	fis.close();
 		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

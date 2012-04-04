@@ -1,9 +1,7 @@
 package org.bubba.bubbasgrocerylist;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,12 +9,14 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.InputSource;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -34,6 +34,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -42,8 +43,11 @@ import android.widget.Toast;
 public class BubbasGroceryListAppActivity extends Activity
 {	// listactivty  populate with an adapter
 	private ItemLocUtils utils = new ItemLocUtils();
+	private KnownItemUtils knownItemsUtil = new KnownItemUtils();
 	private static AutoCompleteTextView textView;
+	LinearLayout editAndAddLL;
 	ArrayList<ItemLoc> groceryList = new ArrayList<ItemLoc>();
+	ArrayList<ItemLoc> knownItemList = new ArrayList<ItemLoc>();
 	public LinearLayout ll;
 	
     @Override
@@ -57,19 +61,23 @@ public class BubbasGroceryListAppActivity extends Activity
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll, 0);	// add ll to sv view
         
-        LinearLayout editAndAddLL = new LinearLayout(this);	// contains text view and add button
-        editAndAddLL.setOrientation(LinearLayout.HORIZONTAL);
+        createTextViewAndAddButton();
         
-	        textView = new AutoCompleteTextView(this);
-	        textView.setWidth(400); // tableview or within linear layout
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-		    	this,
-		    	R.layout.list_item,
-		    	getResources().getStringArray(R.array.food_array));
-		    textView.setAdapter(adapter);
-		    textView.setOnItemClickListener(new OnitemClick()); // selected item from drop down
-		    textView.setInputType(InputType.TYPE_CLASS_TEXT); // make keyboard popup
-		    editAndAddLL.addView(textView, 0);
+        addCheckBoxesFromGroceryFile();
+        
+        this.setContentView(sv);
+    }
+
+	void createTextViewAndAddButton()
+	{
+		editAndAddLL = new LinearLayout(this);	// contains text view and add button
+        editAndAddLL.setOrientation(LinearLayout.HORIZONTAL);
+
+			textView = new AutoCompleteTextView(this);
+			textView.setWidth(400); // tableview or within linear layout
+	        addTextView();
+		    
+	        editAndAddLL.addView(textView, 0);
 		    
 		    Button addButton = new Button(this);
 		    addButton.setText("Add");
@@ -78,11 +86,45 @@ public class BubbasGroceryListAppActivity extends Activity
 		    editAndAddLL.addView(addButton, 1);
 	    
 	    ll.addView(editAndAddLL, 0);	// add list view that contains text view and add button 
-        
-        addCheckBoxesFromGroceryFile();
-        
-        this.setContentView(sv);
-    }
+	}
+
+	void addTextView()
+	{
+		String[] foodArray = utils.getKnownItemsArray(this);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+			this,
+			R.layout.list_item,
+			foodArray);
+		textView.setAdapter(adapter);
+		textView.setOnItemClickListener(new OnitemClick()); // selected item from drop down
+		textView.setInputType(InputType.TYPE_CLASS_TEXT); // make keyboard popup
+	}
+
+//	private String[] getKnownItemsArray(Context context)
+//	{
+//		String[] hardCodedItems = getResources().getStringArray(R.array.food_array);
+//		String[] scannedItems = knownItemsUtil.readKnownItemsListFileAsArray(context);
+//
+//		int length = hardCodedItems.length;
+//		int length2 = scannedItems.length;
+//		
+//		String[] newArray = new String[length + length2];
+//
+//		for (int i = 0; i < length; i++)
+//		{
+//			newArray[i] = hardCodedItems[i];
+//		}
+//		
+//		int x = 0;
+//		for (int i = length; i < length + scannedItems.length; i++)
+//		{
+//			newArray[i] = scannedItems[x];
+//			x += 1;
+//		}
+//		
+//		return newArray;
+//	}
 
 	private void addCheckBoxesFromGroceryFile()
 	{
@@ -119,7 +161,6 @@ public class BubbasGroceryListAppActivity extends Activity
 				cb = new CheckBox(this);
 	            cb.setId(i);
 	            cb.setText(ele.getAisle() +  "  " + ele.getItem());
-	            cb.setSoundEffectsEnabled(true);
 	            cb.setButtonDrawable(R.drawable.trashcan);	// trashcan icon
 	            cb.setLayoutParams(left);	// place on left side of view
 				cb.setOnCheckedChangeListener(new DeleteRowListener()); // add checked listener
@@ -168,28 +209,76 @@ public class BubbasGroceryListAppActivity extends Activity
 	private final class DeleteRowListener implements OnCheckedChangeListener
 	{
 		public void onCheckedChanged(CompoundButton arg0, boolean arg1)
-		{	// they have clicked on the checkbox so remove this row - ***removes all occurences***
-			StringBuffer sb = new StringBuffer(arg0.getText()); // get value of the checkbox text
-			utils.removeLeadingSpacesAndNumbers(sb); // clean up sb for comparison
-			String deleteThisOne = sb.toString();
+		{
+			final CompoundButton arg00 = arg0;
+			String textString = "";
 			
-			ItemLoc il = null;
-			ArrayList<ItemLoc> newList = new ArrayList<ItemLoc>();
-
-			// there has got to be a better way to do this
-			for (Iterator<ItemLoc> iterator = groceryList.iterator(); iterator.hasNext();)
+			int index = arg0.getText().toString().trim().indexOf(" ") + 1;
+			
+			if(index > 1)
 			{
-				il = iterator.next();
-				if(!il.getItem().equals(deleteThisOne))
-				{
-					newList.add(il);	// add rows to new list - except the one they selected
-				}
+				textString = arg0.getText().toString().trim().substring(index);
 			}
-			groceryList = newList;
 			
-			utils.saveFile(groceryList, arg0.getContext());
+	        new AlertDialog.Builder(arg0.getContext())
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("Delete Item?")
+	        .setMessage("Do you want to delete\n\n" + textString + "?")
+	        .setPositiveButton("Delete", new DialogInterface.OnClickListener() 
+	        {
+	            @Override
+	            public void onClick(DialogInterface dialog, int which)
+	            {
+	            	// they have clicked on the checkbox so remove this row - ***removes all occurences***
+	    			StringBuffer sb = new StringBuffer(arg00.getText()); // get value of the checkbox text
+	    			utils.removeLeadingSpacesAndNumbers(sb); // clean up sb for comparison
+	    			String deleteThisOne = sb.toString();
+	    			
+	    			ItemLoc il = null;
+	    			ArrayList<ItemLoc> newList = new ArrayList<ItemLoc>();
+
+	    			// there has got to be a better way to do this
+	    			for (Iterator<ItemLoc> iterator = groceryList.iterator(); iterator.hasNext();)
+	    			{
+	    				il = iterator.next();
+	    				if(!il.getItem().equals(deleteThisOne))
+	    				{
+	    					newList.add(il);	// add rows to new list - except the one they selected
+	    				}
+	    			}
+	    			groceryList = newList;
+	    			
+	    			utils.saveFile(groceryList, arg00.getContext());
+	    			
+	    			addCheckBoxesFromGroceryFile();	// repaint screen now that we've removed a row
+	            	
+	            }
+	        })
+	        .setNegativeButton("cancel", null)
+	        .show();
 			
-			addCheckBoxesFromGroceryFile();	// repaint screen now that we've removed a row
+//			// they have clicked on the checkbox so remove this row - ***removes all occurences***
+//			StringBuffer sb = new StringBuffer(arg0.getText()); // get value of the checkbox text
+//			utils.removeLeadingSpacesAndNumbers(sb); // clean up sb for comparison
+//			String deleteThisOne = sb.toString();
+//			
+//			ItemLoc il = null;
+//			ArrayList<ItemLoc> newList = new ArrayList<ItemLoc>();
+//
+//			// there has got to be a better way to do this
+//			for (Iterator<ItemLoc> iterator = groceryList.iterator(); iterator.hasNext();)
+//			{
+//				il = iterator.next();
+//				if(!il.getItem().equals(deleteThisOne))
+//				{
+//					newList.add(il);	// add rows to new list - except the one they selected
+//				}
+//			}
+//			groceryList = newList;
+//			
+//			utils.saveFile(groceryList, arg0.getContext());
+//			
+//			addCheckBoxesFromGroceryFile();	// repaint screen now that we've removed a row
 		}
 	}
 	
@@ -311,14 +400,13 @@ public class BubbasGroceryListAppActivity extends Activity
 	String[] readGoogleApi(String upc)
 	{
 		String[] results = new String[25];
-
+		
 		try
 		{
 			URL url = new URL(
 					"https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyBwV4tNao1xC68ilalkKytyXICfrPH91MA&country=US&q="
 							+ upc + "&alt=json");
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			InputStream stream = connection.getInputStream();
 			InputSource inputSource = new InputSource(stream);
 			InputStream byteStream = inputSource.getByteStream();
@@ -331,31 +419,19 @@ public class BubbasGroceryListAppActivity extends Activity
 			{
 				record.append((char) ch);
 			}
-
+			
 			JSONTokener jsonTokener = new JSONTokener(record.toString());
-			try
-			{
-				JSONObject nextValue = (JSONObject) jsonTokener.nextValue();
-				JSONArray jsonArray = (JSONArray) nextValue
-						.getJSONArray("items");
+			JSONObject nextValue = (JSONObject) jsonTokener.nextValue();
+			JSONArray jsonArray = (JSONArray) nextValue.getJSONArray("items");
 
-				for (int i = 0; i < jsonArray.length(); i++)
-				{
-					JSONObject oobbjj = (JSONObject) jsonArray.opt(i);
-					JSONObject product = (JSONObject) oobbjj.get("product");
-					results[i] = (String) product.get("title");
-				}
-			}
-			catch (JSONException e)
+			for (int i = 0; i < jsonArray.length(); i++)
 			{
-				e.printStackTrace();
+				JSONObject oobbjj = (JSONObject) jsonArray.opt(i);
+				JSONObject product = (JSONObject) oobbjj.get("product");
+				results[i] = (String) product.get("title");
 			}
 		}
-		catch (MalformedURLException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -367,9 +443,19 @@ public class BubbasGroceryListAppActivity extends Activity
     public void onActivityResult(int requestCode,int resultCode,Intent data)
     {	// after we get back from BigListActivity etc, reload page
 	     super.onActivityResult(requestCode, resultCode, data);
-	     
-	     switch(requestCode) 
+
+	     switch(resultCode) 
 	     {
+	     	case 92:
+	     		Toast.makeText(this, "barcode not found. sorry", Toast.LENGTH_SHORT).show();
+	     		break;
+	     	case 93:
+	     		addTextView();
+	     		break;
+	     }
+
+   	     switch(requestCode) 
+   	     {
 	     	case 101:
 	     		addCheckBoxesFromGroceryFile();
 	     		break;
@@ -383,33 +469,16 @@ public class BubbasGroceryListAppActivity extends Activity
 			    	 if (scanResult != null) 
 			    	 {
 			    		 String upc = scanResult.getContents();
+			    		 String[] results = readGoogleApi(upc);
 			    		 
-			    		 Toast.makeText(getBaseContext(), "upc '" + upc + "'", 
-			                        Toast.LENGTH_SHORT).show();
-//			    		 try
-//			    		 {
-//				    		URL url = new URL(
-//										"https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyBwV4tNao1xC68ilalkKytyXICfrPH91MA&country=US&q=022000159335&alt=xml");
-//							HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//							InputStream stream = connection.getInputStream();
-//							InputSource inputSource = new InputSource(stream);
-//							String ipString = inputSource.toString();
-//							Toast.makeText(getBaseContext(), ipString, Toast.LENGTH_LONG);
-
-				    		String[] results = readGoogleApi(upc);
-				    		groceryList.add(new ItemLoc(results[0], "99", "1"));
-				    		utils.saveFile(groceryList, this);
-				    		addCheckBoxesFromGroceryFile();
-//			    		 }
-//			    		 catch (MalformedURLException e)
-//						{
-//							e.printStackTrace();
-//						}
-//						catch (IOException e)
-//						{
-//							e.printStackTrace();
-//						}
+			    		  Intent myIntent = new Intent(this, PickDescriptionActivity.class);
+			    		  myIntent.putExtra("googleApiArray", results);
+				          startActivityForResult(myIntent, 113);
+//					      return true;
 			    		 
+//			    		 groceryList.add(new ItemLoc(results[0], "99", "1"));
+//			    		 utils.saveFile(groceryList, this);
+//			    		 addCheckBoxesFromGroceryFile();
 			    	 }
 			     }
 		    }

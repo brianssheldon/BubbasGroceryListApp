@@ -28,5 +28,6 @@
         </activity>
  		<activity android:name=".EditTextMsgNumbersActivity"></activity>
  		<activity android:name=".BigListActivity"></activity>
+ 		<activity android:name=".PickDescriptionActivity"></activity>
     </application>
 </manifest>
