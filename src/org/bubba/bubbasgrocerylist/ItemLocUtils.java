@@ -94,21 +94,28 @@ public class ItemLocUtils
 
 		int length = hardCodedItems.length;
 		int length2 = scannedItems.length;
-		
+
 		String[] newArray = new String[length + length2];
+		ArrayList<String> newList = new ArrayList();
 
 		for (int i = 0; i < length; i++)
 		{
 			newArray[i] = hardCodedItems[i];
+			newList.add(hardCodedItems[i]);
 		}
 		
 		int x = 0;
 		for (int i = length; i < length + scannedItems.length; i++)
 		{
+			if(scannedItems[x].contains("empty, 1")) break;
+			
 			newArray[i] = scannedItems[x];
+			newList.add(scannedItems[x]);
 			x += 1;
 		}
 		
+		Collections.sort(newList);
+		newArray = (String[]) newList.toArray(newArray);
 		return newArray;
 	}
 	

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.bubba.bubbasgrocerylist"
-    android:versionCode="9"
-    android:versionName="1.4.2">
+    android:versionCode="12"
+    android:versionName="1.4.5">
 
     <uses-sdk android:minSdkVersion="2" android:targetSdkVersion="2"/>
     
     <uses-permission android:name="android.permission.SEND_SMS" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET" android:required="false"/>
-	<!--  <uses-library android:name="com.google.android.maps" />  -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-library android:name="com.google.android.maps" /> 
 	
 	<supports-screens android:resizeable="true"
                   android:smallScreens="true"

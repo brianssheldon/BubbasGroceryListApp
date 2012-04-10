@@ -18,6 +18,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -34,7 +36,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -197,6 +198,11 @@ public class BubbasGroceryListAppActivity extends Activity
 			groceryList.add(new ItemLoc(name, "99", "1"));	// since they hit the add button, 
 															// we don't know the aisle so use 99
 			
+			ArrayList<ItemLoc> knownItemList = knownItemsUtil.readKnownItemsListFile(v.getContext());
+			knownItemList.add(new ItemLoc(name, "99", "1"));
+			knownItemsUtil.saveFile(knownItemList, v.getContext());
+			addTextView();
+			
 			utils.saveFile(groceryList, v.getContext());	// save arraylist of ItemLoc's to file
 
 			addCheckBoxesFromGroceryFile(); // repopulate the screen
@@ -351,6 +357,13 @@ public class BubbasGroceryListAppActivity extends Activity
 	    return true;
 	}
 	
+	private boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null;
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{	// called when they have selected a menu option
@@ -373,7 +386,14 @@ public class BubbasGroceryListAppActivity extends Activity
 		    case R.id.scanBarcode:
 		    	try
 		    	{
-		    		IntentIntegrator.initiateScan(this);
+		    		if(isNetworkAvailable())
+		    		{
+		    			IntentIntegrator.initiateScan(this);
+		    		}
+		    		else
+		    		{
+		    			Toast.makeText(this, "you need an internet connection to scan a bar code", Toast.LENGTH_LONG).show();
+		    		}
 		    	}
 		    	catch (Exception e)
 		    	{

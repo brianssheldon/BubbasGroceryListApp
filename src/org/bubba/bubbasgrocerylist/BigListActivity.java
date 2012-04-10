@@ -18,11 +18,14 @@ public class BigListActivity extends Activity
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll, 0);
         
-        String[] foodArray = (new ItemLocUtils()).getKnownItemsArray(this) ;
+        String[] foodArray = (new ItemLocUtils()).getKnownItemsArray(this);
         		//getResources().getStringArray(R.array.food_array);
         
         for (int i = 0; i < foodArray.length; i++)
         {
+        	if(null == foodArray[i]
+        		|| "".equals(foodArray[i])) continue;
+        		
 			CheckBox cb = new CheckBox(this);
 			cb.setId(i);
             cb.setText(foodArray[i]);

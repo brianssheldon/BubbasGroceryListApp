@@ -57,7 +57,7 @@ public class PickDescriptionActivity extends Activity
     		KnownItemUtils utils = new KnownItemUtils();
     		
     		ArrayList<ItemLoc> list = utils.readKnownItemsListFile(arg0.getContext());
-    		list.add(new ItemLoc(text, "99", "1"));
+    		list.add(new ItemLoc(text, "99"));
     		utils.saveFile(list, arg0.getContext());
     		setResult(93);
     		finish();

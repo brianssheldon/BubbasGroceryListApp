@@ -95,7 +95,7 @@ public class KnownItemUtils
 		for (int i = 0; i < list.size(); i++)
 		{
 			loc = list.get(i);
-			array[i] = loc.getItem() + ", " + loc.getAisle();
+			array[i] = loc.getItem() + "," + loc.getAisle();
 		}
 		
 		return array;
