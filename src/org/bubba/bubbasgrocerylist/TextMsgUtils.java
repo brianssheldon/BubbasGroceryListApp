@@ -1,8 +1,6 @@
 package org.bubba.bubbasgrocerylist;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.StringTokenizer;
 
 import android.content.Context;

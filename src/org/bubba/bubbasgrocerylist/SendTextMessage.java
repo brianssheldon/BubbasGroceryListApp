@@ -6,7 +6,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.telephony.SmsManager;
+import android.widget.Toast;
 
 public class SendTextMessage
 {
@@ -67,35 +75,79 @@ public class SendTextMessage
     	return record;
 	}
 	
-	void sendTextMsg(String nbr, BubbasGroceryListAppActivity act, ArrayList<ItemLoc> list)
+	@SuppressLint("NewApi")
+	void sendTextMsg(String nbr, final BubbasGroceryListAppActivity act, ArrayList<ItemLoc> list)
 	{
 		SmsManager sms = SmsManager.getDefault();
 		
 		StringBuffer sb = new StringBuffer(153);
 		sb.append("\n");
         ItemLoc ele;
-        int j = 0;
+
+		PendingIntent sentPI = PendingIntent.getBroadcast(act.getApplicationContext(), 0, new Intent("sent"), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(act.getApplicationContext(), 0, new Intent("delivered"), 0);
         
+        act.registerReceiver(new BroadcastReceiver()
+        {
+			@Override
+			public void onReceive(Context context, Intent arg1)
+			{
+				switch (getResultCode())
+				{
+				case Activity.RESULT_OK:
+					Toast.makeText(context.getApplicationContext(), "message sent", Toast.LENGTH_SHORT).show();
+					break;
+					
+				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+					Toast.makeText(context.getApplicationContext(), "Generic failure", Toast.LENGTH_SHORT).show();
+					break;
+					
+				case SmsManager.RESULT_ERROR_NO_SERVICE:
+					Toast.makeText(context.getApplicationContext(), "No service", Toast.LENGTH_SHORT).show();
+					break;
+					
+				case SmsManager.RESULT_ERROR_NULL_PDU:
+					Toast.makeText(context.getApplicationContext(), "Null PDU", Toast.LENGTH_SHORT).show();
+					break;
+					
+				case SmsManager.RESULT_ERROR_RADIO_OFF:
+					Toast.makeText(context.getApplicationContext(), "Radio off", Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+		},  new IntentFilter("sent"));
+        
+		act.registerReceiver(new BroadcastReceiver(){
+		    @Override
+		    public void onReceive(Context context, Intent arg1) {
+		        switch (getResultCode())
+		        {
+		            case Activity.RESULT_OK:
+		                Toast.makeText(context.getApplicationContext(), "message delivered", 
+		                        Toast.LENGTH_SHORT).show();
+		                break;
+		            case Activity.RESULT_CANCELED:
+		                Toast.makeText(context.getApplicationContext(), "message not delivered", 
+		                        Toast.LENGTH_SHORT).show();
+		                break;                        
+		        }
+		    }
+		}, new IntentFilter("delivered"));
+		
         for (int i = 0; i < list.size(); i++)
 		{
 			ele = list.get(i);
 			
 			if(150 < sb.length() + ele.toString().length())
 			{
-				sms.sendTextMessage(nbr, null, sb.toString(), null, null);
+				sms.sendTextMessage(nbr, null, sb.toString(), sentPI, deliveredPI);
 				sb = new StringBuffer(153);
 				sb.append("\n");
 			}
             sb.append(ele.toString() + "\n");
 		}
-        sms.sendTextMessage(nbr, null, sb.toString(), null, null);
+
         
-//         NICE! split the string into sms sized chunks!
-//        ArrayList<String> divideMessage = sms.divideMessage(sb.toString());
-//        
-//		for (int i = 0; i < divideMessage.size(); i++)
-//		{
-//			sms.sendTextMessage(nbr, null, divideMessage.get(i), null, null);
-//		}
+        sms.sendTextMessage(nbr, null, sb.toString(), sentPI, deliveredPI);
 	}
 }

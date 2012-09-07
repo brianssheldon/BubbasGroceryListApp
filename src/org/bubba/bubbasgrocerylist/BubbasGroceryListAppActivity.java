@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.InputSource;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -127,6 +128,7 @@ public class BubbasGroceryListAppActivity extends Activity
 //		return newArray;
 //	}
 
+	@SuppressLint("NewApi")
 	private void addCheckBoxesFromGroceryFile()
 	{
 		while (ll.getChildCount() > 1)
