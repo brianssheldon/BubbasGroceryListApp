@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.bubba.bubbasgrocerylist"
     android:versionCode="12"
-    android:versionName="1.4.5">
+    android:versionName="1.4.6">
 
     <uses-sdk
         android:minSdkVersion="2"
@@ -16,8 +16,6 @@
         android:required="false" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-library android:name="com.google.android.maps" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -27,8 +25,8 @@
 
     <application
         android:icon="@drawable/bubbadevil"
-        android:label="@string/bubba_s_grocery_list_app"
-        android:debuggable="true">
+        android:label="@string/bubba_s_grocery_list_app">
+  <!--     android:debuggable="true"> --> 
         <activity
             android:name=".BubbasGroceryListAppActivity"
             android:label="@string/bubba_s_grocery_list_app" >
@@ -38,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <uses-library android:name="com.google.android.maps" />
         <activity android:name=".EditTextMsgNumbersActivity" />
         <activity android:name=".BigListActivity" />
         <activity android:name=".PickDescriptionActivity" />
