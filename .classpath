@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="lib" path="/home/dtc2225/Desktop/google-api-java-client-1.6.0-beta.zip"/>
+	<classpathentry exported="true" kind="lib" path="/home/dtc2225/Desktop/google-api-services-shopping-v1-rev4-1.4.0-beta.zip"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

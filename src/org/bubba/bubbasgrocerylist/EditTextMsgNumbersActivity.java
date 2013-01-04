@@ -1,10 +1,9 @@
-package org.bubba;
+package org.bubba.bubbasgrocerylist;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 
 public class EditTextMsgNumbersActivity extends Activity
 {
@@ -37,20 +35,22 @@ public class EditTextMsgNumbersActivity extends Activity
         txt2 = (EditText) findViewById(R.id.entry2);
         txt3 = (EditText) findViewById(R.id.entry3);
 		
-		String[] parsedTxtMsgNbrs = parseTxtMsgNbrs(readTextMsgNumbersFile().toString());
+        TextMsgUtils textUtils = new TextMsgUtils();
+		String[] parsedTxtMsgNbrs = textUtils.parseTxtMsgNbrs(
+				readTextMsgNumbersFile().toString());
 		
 		txt1.setText(parsedTxtMsgNbrs[0]);		
 		txt2.setText(parsedTxtMsgNbrs[1]);		
 		txt3.setText(parsedTxtMsgNbrs[2]);
-
+		
 		saveButton = (Button) findViewById(R.id.save2);
-		saveButton.setOnClickListener(btnSaveOnClick);
+		saveButton.setOnClickListener(btnSaveOnClick); // look into myactivity implements onclicklistener 
 		
 		exitButton = (Button) findViewById(R.id.exit2);
 		exitButton.setOnClickListener(btnExitOnClick);
     }
     
-    // Click listener for the Add button.
+    // Click listener for the save button.
     private final Button.OnClickListener btnSaveOnClick = new Button.OnClickListener() 
     {
         public void onClick(View v) 
@@ -59,7 +59,7 @@ public class EditTextMsgNumbersActivity extends Activity
         }
     };
     
-    // Click listener for the Add button.
+    // Click listener for the exit button.
     private final Button.OnClickListener btnExitOnClick = new Button.OnClickListener() 
     {
         public void onClick(View v) 
@@ -70,37 +70,11 @@ public class EditTextMsgNumbersActivity extends Activity
         }
     };
 
-	private String[] parseTxtMsgNbrs(String readTxtMsgNbrs)
-	{
-		String[] nbrs = new String[]{" ", " ", " "};
-		
-		if(null == readTxtMsgNbrs || "".equals(readTxtMsgNbrs.trim()))
-		{
-			return nbrs;
-		}
-		
-		StringTokenizer st = new StringTokenizer(readTxtMsgNbrs, "|");
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if(st.hasMoreElements())
-			{
-				nbrs[i] = st.nextToken();
-			}
-			else
-			{
-				nbrs[i] = " ";
-			}
-		}
-				
-		return nbrs;
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.editfoodlistmenu, menu); 
+	    inflater.inflate(R.menu.edittextmsgnbrmenu, menu); 
 	    return true;
 	}
 	
@@ -108,11 +82,7 @@ public class EditTextMsgNumbersActivity extends Activity
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 	    switch (item.getItemId())
-	    {
-//		    case R.id.ok:
-//		    	saveFile();
-//		        return true;
-		        
+	    {       
 		    case R.id.exit:
 		    	Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
@@ -158,7 +128,7 @@ public class EditTextMsgNumbersActivity extends Activity
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			saveFile();
 		} 
 		catch (IOException e)
 		{
