@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.bubba"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="7" />
+    package="org.bubba.bubbasgrocerylist"
+    android:versionCode="12"
+    android:versionName="1.4.6">
 
-    <application android:icon="@drawable/bubbadevil" android:label="Bubba's Grocery List App" android:debuggable="true">
-        <activity android:name=".BubbasGroceryListAppActivity"
-                  android:label="Bubba's Grocery List App">
+    <uses-sdk
+        android:minSdkVersion="2"
+        android:targetSdkVersion="2" />
+
+    <uses-permission
+        android:name="android.permission.SEND_SMS"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <application
+        android:icon="@drawable/bubbadevil"
+        android:label="@string/bubba_s_grocery_list_app">
+  <!--     android:debuggable="true"> --> 
+        <activity
+            android:name=".BubbasGroceryListAppActivity"
+            android:label="@string/bubba_s_grocery_list_app" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
- 		<activity android:name=".EditTextMsgNumbersActivity"></activity>
+        <uses-library android:name="com.google.android.maps" />
+        <activity android:name=".EditTextMsgNumbersActivity" />
+        <activity android:name=".BigListActivity" />
+        <activity android:name=".PickDescriptionActivity" />
     </application>
-    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+
 </manifest>
